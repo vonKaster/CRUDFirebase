@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import editTaskView from '../views/editTaskView.vue'
 import addTaskView from '../views/addTaskView.vue'
+import RegisterView from '../views/RegisterView.vue'
 
 Vue.use(VueRouter)
 
@@ -21,6 +22,11 @@ const routes = [
     path: '/addTask',
     name: 'addTask',
     component: addTaskView
+  },
+  {
+    path: '/register',
+    name: 'register',
+    component: RegisterView
   },
 ]
 

@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import { db } from '../firebase'
 import router from '../router'
+import { auth } from '../firebase'
 
 Vue.use(Vuex)
 
@@ -9,7 +10,9 @@ export default new Vuex.Store({
   state: { 
     tasks: [],
     task: {name: '', id: ''},
-    snackBarAlerts: []
+    snackBarAlerts: [],
+    user: null,
+    error: null
   },
   getters: {
   },
@@ -28,6 +31,12 @@ export default new Vuex.Store({
       state.snackBarAlerts.push(payload);
       console.log(state.snackBarAlerts);
     },
+    setUser(state, payload) {
+      state.user = payload;
+    },
+    setError(state, payload) {
+      state.error = payload;
+    }
   },
   actions: {
     getTasks({commit}){
@@ -86,6 +95,22 @@ export default new Vuex.Store({
           color: "green",
           timeout: 5000,
         });
+      })
+    },
+    createUser({commit}, credentials) {
+      auth.createUserWithEmailAndPassword(credentials.email, credentials.passwd)
+      .then(res => {
+        console.log(res);
+        const createdUser = {
+          email: res.user.email,
+          uid: res.additionalUserInfo.uid
+        }
+        commit('setUser', createdUser)
+        router.push('/')
+      })
+      .catch(error => {
+        console.log(error);
+        commit('setError', error)
       })
     }
   },
