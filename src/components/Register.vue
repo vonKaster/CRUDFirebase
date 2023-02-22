@@ -1,6 +1,8 @@
 <template>
-    <v-container @submit.prevent="createUser({email: email, passwd: passwd})">
-        <v-form ref="form">
+    <v-container>
+        <h1>Registro</h1>
+
+        <v-form @submit.prevent="createUser({email: email, passwd: passwd})">
             <v-text-field type="email" placeholder="Ingrese su correo electŕonico" v-model="email"/>
             <v-text-field type="password" placeholder="Ingrese su contraseña" v-model="passwd"/>
             <v-text-field type="password" placeholder="Repita su contraseña" v-model="passwdConfirm"/>
