@@ -1,5 +1,8 @@
 <template>
   <v-container>
+    <v-btn class="mt-4 mb-4" @click="$router.go(-1)"
+        ><v-icon color="black">mdi-chevron-left</v-icon></v-btn
+      >
     <h1>Agregar Tarea</h1>
     <v-form @submit.prevent="addTask(name)">
       <v-text-field class="mt-3" outlined label="Nombre" v-model="name" />

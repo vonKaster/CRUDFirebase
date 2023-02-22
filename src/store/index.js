@@ -1,8 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { db } from '../firebase'
+import { auth, db } from '../firebase'
 import router from '../router'
-import { auth } from '../firebase'
 
 Vue.use(Vuex)
 
@@ -39,9 +38,9 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    getTasks({commit}){
+    getTasks({commit, state}){
       const tasks = []
-      db.collection('tasks').get()
+      db.collection(state.user.email).get()
       .then(res => {
         res.forEach(doc => { 
           let task = doc.data()
@@ -51,16 +50,16 @@ export default new Vuex.Store({
         commit('setTasks', tasks)
       })
     },
-    getTask({commit}, id) {
-      db.collection('tasks').doc(id).get()
+    getTask({commit, state}, id) {
+      db.collection(state.user.email).doc(id).get()
       .then(doc => {
         let task = doc.data()
         task.id = doc.id
         commit('setTask', task)
       })
     },
-    editTask({commit}, task) {
-      db.collection('tasks').doc(task.id).update({
+    editTask({commit, state}, task) {
+      db.collection(state.user.email).doc(task.id).update({
         name: task.name
       })
       .then(() => {
@@ -72,8 +71,8 @@ export default new Vuex.Store({
         });
       })
     },
-    addTask({commit}, taskName) {
-      db.collection('tasks').add({
+    addTask({commit, state}, taskName) {
+      db.collection(state.user.email).add({
         name: taskName
       })
       .then (doc => {
@@ -85,8 +84,8 @@ export default new Vuex.Store({
         });
       })
     },
-    deleteTask({commit}, id) {
-      db.collection('tasks').doc(id).delete()
+    deleteTask({commit, state}, id) {
+      db.collection(state.user.email).doc(id).delete()
       .then(() => {
         commit('setDeleteTask', id);
         console.log(this.snackBarAlerts);
@@ -105,8 +104,14 @@ export default new Vuex.Store({
           email: res.user.email,
           uid: res.additionalUserInfo.uid
         }
-        commit('setUser', createdUser)
-        router.push('/')
+
+        db.collection(res.user.email).add({
+          name: 'tarea de ejemplo'
+        }).then(dic => {
+          commit('setUser', createdUser)
+          router.push('/')
+        })
+        .catch(err => console.log(err))
       })
       .catch(err => {
         console.log(err);

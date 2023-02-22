@@ -1,6 +1,9 @@
 <template>
     <v-container>
-      <h1>Editar</h1>
+      <v-btn class="mt-4 mb-4" @click="$router.go(-1)"
+        ><v-icon color="black">mdi-chevron-left</v-icon></v-btn
+      >
+      <h1>Editar Tarea</h1>
       {{ task.id }} - {{ task.name }}
       <v-form @submit.prevent="editTask(task)">
         <v-text-field v-model="task.name"/>

@@ -10,11 +10,12 @@
     >
       <template slot="item.actions" slot-scope="{ item }">
         <v-btn
+          text
           color="warning"
           :to="{ name: 'editTask', params: { id: item.id } }"
           >Editar</v-btn
         >
-        <v-btn color="error" class="ms-4" @click="deleteTask(item.id)"
+        <v-btn text color="error" class="ms-4" @click="deleteTask(item.id)"
           >Eliminar</v-btn
         >
       </template>
