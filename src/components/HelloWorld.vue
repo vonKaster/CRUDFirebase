@@ -1,12 +1,12 @@
 <template>
   <v-container class="mx-auto text-center">
     <h1>Simple CRUD | Firebase</h1>
-    <v-btn color="success" :to="{ name: 'addTask' }">Agregar Tarea</v-btn>
+    <v-btn class="mt-3 mb-2" color="success" :to="{ name: 'addTask' }">Agregar Tarea</v-btn>
     <v-data-table
       :headers="headers"
       :items="tasks"
       :items-per-page="10"
-      class="elevation-1 mt-6"
+      class="mt-6 tasksTable"
     >
       <template slot="item.actions" slot-scope="{ item }">
         <v-btn

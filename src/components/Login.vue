@@ -1,40 +1,52 @@
 <template>
-    <v-container>
-        <h1>Acceso</h1>
-        
-        <v-form @submit.prevent="signIn({email: email, passwd: passwd})">
-            <v-text-field type="email" placeholder="Ingrese su correo electŕonico" v-model="email"/>
-            <v-text-field type="password" placeholder="Ingrese su contraseña" v-model="passwd"/>
-            <v-btn color="success" type="submit">Enviar</v-btn>
+  <v-container>
+    <v-row>
+      <v-container class="formLoginContainer">
+        <h1 class="text-center">Acceso</h1>
+        <br />
+        <v-form @submit.prevent="signIn({ email: email, passwd: passwd })">
+          <v-text-field
+            outlined
+            type="email"
+            placeholder="Ingrese su correo electŕonico"
+            v-model="email"
+            append-icon="mdi-account"
+          />
+          <v-text-field
+            outlined
+            type="password"
+            placeholder="Ingrese su contraseña"
+            v-model="passwd"
+            append-icon="mdi-lock"
+          />
+          <v-btn dark color="#3f51b5" type="submit">Ingresar</v-btn>
         </v-form>
-        <p>{{ error }}</p>
-
-    </v-container>
+        <p class="text-center mt-4">{{ error }}</p>
+      </v-container>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapState } from "vuex";
 export default {
-    name: 'Login',
+  name: "Login",
 
-    data() {
-        return {
-            email: '',
-            passwd: ''
-        };
-    },
+  data() {
+    return {
+      email: "",
+      passwd: "",
+    };
+  },
 
-    mounted() {
-        
-    },
+  mounted() {},
 
-    computed: {
-        ...mapState(['error']),
-    },
+  computed: {
+    ...mapState(["error"]),
+  },
 
-    methods: {
-        ...mapActions(['signIn'])
-        
-    },
+  methods: {
+    ...mapActions(["signIn"]),
+  },
 };
 </script>

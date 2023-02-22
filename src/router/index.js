@@ -20,22 +20,26 @@ const routes = [
   {
     path: '/editTask/:id',
     name: 'editTask',
-    component: editTaskView
+    component: editTaskView,
+    meta: { requiresAuth: true }
   },
   {
     path: '/addTask',
     name: 'addTask',
-    component: addTaskView
+    component: addTaskView,
+    meta: { requiresAuth: true }
   },
   {
     path: '/register',
     name: 'register',
-    component: RegisterView
+    component: RegisterView,
+    meta: { background: true }
   },
   {
     path: '/login',
     name: 'login',
-    component: LoginView
+    component: LoginView,
+    meta: { background: true }
   },
 ]
 
