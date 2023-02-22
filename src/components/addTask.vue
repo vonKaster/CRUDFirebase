@@ -1,13 +1,23 @@
 <template>
   <v-container>
-    <v-btn class="mt-4 mb-4" @click="$router.go(-1)"
-        ><v-icon color="black">mdi-chevron-left</v-icon></v-btn
-      >
-    <h1>Agregar Tarea</h1>
-    <v-form @submit.prevent="addTask(name)">
-      <v-text-field class="mt-3" outlined label="Nombre" v-model="name" />
-      <v-btn color="success" type="submit">Agregar</v-btn>
-    </v-form>
+    <v-btn color="indigo" text class="mt-4 mb-4" @click="$router.go(-1)"
+      ><v-icon>mdi-chevron-left</v-icon></v-btn
+    >
+    <v-container class="editTaskContainer elevation-1">
+      <div class="pa-4">
+        <h1 class="text-center">Agregar Tarea</h1>
+        <v-form @submit.prevent="addTask(name)">
+          <v-text-field
+            append-icon="mdi-note-plus"
+            class="mt-3"
+            outlined
+            label="Nombre"
+            v-model="name"
+          />
+          <v-btn color="success" type="submit">Agregar</v-btn>
+        </v-form>
+      </div>
+    </v-container>
     <v-snackbars bottom right :objects.sync="this.snackBarAlerts">
       <template v-slot:action="{ close }">
         <v-btn text @click="close()">Cerrar</v-btn>

@@ -45,4 +45,11 @@ main {
   border: 2px solid white;
   border-radius: 10px;
 }
+.editTaskContainer {
+  width: 500px;
+  border-radius: 5px;
+}
+.editTaskContainer button {
+  width: 100%;
+}
 </style>
