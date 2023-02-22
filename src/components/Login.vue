@@ -22,6 +22,20 @@
           <v-btn dark color="#3f51b5" type="submit">Ingresar</v-btn>
         </v-form>
         <p class="text-center mt-4">{{ error }}</p>
+        <v-divider :thickness="4"></v-divider>
+        <v-container>
+          <div class="mx-auto text-center">
+            <v-btn @click="signInGoogle()" x-large icon color="#3f51b5"
+              ><v-icon>mdi-google</v-icon></v-btn
+            >
+            <v-btn x-large icon color="#3f51b5"
+              ><v-icon>mdi-github</v-icon></v-btn
+            >
+            <v-btn x-large icon color="#3f51b5"
+              ><v-icon>mdi-twitter</v-icon></v-btn
+            >
+          </div>
+        </v-container>
       </v-container>
     </v-row>
   </v-container>
@@ -39,14 +53,31 @@ export default {
     };
   },
 
-  mounted() {},
+  created() {
+    const style = document.createElement("style");
+    style.setAttribute("id", "custom-main-style");
+    style.textContent = `
+      main {
+        background-image: url(https://raw.githubusercontent.com/vonKaster/CRUDFirebase/5d71b7551b98a6451962773ab466acb9ddd83bd1/src/assets/wave.svg)!important;
+        background-position: bottom center;
+      }
+    `;
+    document.head.appendChild(style);
+  },
+
+  beforeDestroy() {
+    const style = document.getElementById("custom-main-style");
+    if (style) {
+      document.head.removeChild(style);
+    }
+  },
 
   computed: {
     ...mapState(["error"]),
   },
 
   methods: {
-    ...mapActions(["signIn"]),
+    ...mapActions(["signIn", "signInGoogle"]),
   },
 };
 </script>

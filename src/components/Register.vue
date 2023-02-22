@@ -49,7 +49,24 @@ export default {
     };
   },
 
-  mounted() {},
+  created() {
+    const style = document.createElement("style");
+    style.setAttribute("id", "custom-main-style");
+    style.textContent = `
+      main {
+        background-image: url(https://raw.githubusercontent.com/vonKaster/CRUDFirebase/5d71b7551b98a6451962773ab466acb9ddd83bd1/src/assets/wave.svg)!important;
+        background-position: bottom center;
+      }
+    `;
+    document.head.appendChild(style);
+  },
+
+  beforeDestroy() {
+    const style = document.getElementById("custom-main-style");
+    if (style) {
+      document.head.removeChild(style);
+    }
+  },
 
   methods: {
     ...mapActions(["createUser"]),

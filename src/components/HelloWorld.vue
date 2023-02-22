@@ -6,7 +6,7 @@
       :headers="headers"
       :items="tasks"
       :items-per-page="10"
-      class="mt-6 tasksTable"
+      class="elevation-3 mt-6 tasksTable"
     >
       <template slot="item.actions" slot-scope="{ item }">
         <v-btn

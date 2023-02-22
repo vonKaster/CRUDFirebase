@@ -22,16 +22,12 @@ export default {
   data: () => ({
     //
   }),
-
 };
 </script>
 
 <style>
 main {
-  padding: 96px 96px 10px 96px !important;
-  background-image: url(./assets/wave.svg) !important;
-  background-position: bottom center;
-  background-color: #fbfbfb;
+  padding: 96px 96px 10px 96px!important;
 }
 
 .formLoginContainer {
