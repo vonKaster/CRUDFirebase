@@ -4,7 +4,7 @@
       <v-container class="formLoginContainer">
         <h1 class="text-center">Acceso</h1>
         <br />
-        <v-form @submit.prevent="signIn({ email: email, passwd: passwd })">
+        <v-form @submit.prevent="signIn({ provider: 'email', credentials: { email: email, passwd: passwd } })">
           <v-text-field
             outlined
             type="email"
@@ -25,14 +25,14 @@
         <v-divider :thickness="4"></v-divider>
         <v-container>
           <div class="mx-auto text-center">
-            <v-btn @click="signInGoogle()" x-large icon color="#3f51b5"
+            <v-btn @click="signIn({ provider: 'google'})" x-large icon color="#3f51b5"
               ><v-icon>mdi-google</v-icon></v-btn
             >
-            <v-btn x-large icon color="#3f51b5"
+            <v-btn @click="signIn({ provider: 'github'})" x-large icon color="#3f51b5"
               ><v-icon>mdi-github</v-icon></v-btn
             >
-            <v-btn x-large icon color="#3f51b5"
-              ><v-icon>mdi-twitter</v-icon></v-btn
+            <v-btn @click="signIn({ provider: 'facebook'})" x-large icon color="#3f51b5"
+              ><v-icon>mdi-facebook</v-icon></v-btn
             >
           </div>
         </v-container>
@@ -77,7 +77,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(["signIn", "signInGoogle"]),
+    ...mapActions(["signIn"]),
   },
 };
 </script>

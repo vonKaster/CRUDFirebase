@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { db, auth } from '../firebase'
+import { db, auth, GoogleAuthProvider, FacebookAuthProvider, GithubAuthProvider } from '../firebase'
 import router from '../router'
 
 Vue.use(Vuex)
@@ -118,22 +118,42 @@ export default new Vuex.Store({
         commit('setError', err)
       })
     },
-    signIn({commit}, credentials) {
-      auth.signInWithEmailAndPassword(credentials.email, credentials.passwd)
-      .then(res => {
-        console.log(res)
-        const userLoggedIn = {
-          email: res.user.email,
-          uid: res.additionalUserInfo.uid
-        }
-        commit('setUser', userLoggedIn )
-        router.push('/')
-      })
-      .catch(err => {
-        console.log(err);
-        commit('setError', err);
-      })
+    signIn({ commit }, { provider, credentials }) {
+      console.log(credentials);
+      let authPromise = null;
+      if (provider === 'email') {
+        authPromise = auth.signInWithEmailAndPassword(credentials.email, credentials.passwd);
+      } else if (provider === 'google') {
+        const provider = new GoogleAuthProvider();
+        authPromise = auth.signInWithPopup(provider);
+      } else if (provider === 'facebook') {
+        const provider = new FacebookAuthProvider();
+        authPromise = auth.signInWithPopup(provider);
+      } else if (provider === 'github') {
+        const provider = new GithubAuthProvider();
+        authPromise = auth.signInWithPopup(provider);
+      } else {
+        console.error('Invalid provider');
+        return;
+      }
+    
+      authPromise
+        .then(res => {
+          console.log(res)
+          const userLoggedIn = {
+            email: res.user.email,
+            uid: res.additionalUserInfo.uid
+          }
+          commit('setUser', userLoggedIn )
+          router.push('/')
+        })
+        .catch(err => {
+          console.log(err);
+          commit('setError', err);
+        })
     },
+    
+    
     signOut({commit}) {
       auth.signOut()
       .then(() => {
