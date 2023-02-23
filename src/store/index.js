@@ -18,6 +18,7 @@ export default new Vuex.Store({
     snackBarAlerts: [],
     user: null,
     error: null,
+    loader: false
   },
   getters: {},
   mutations: {
@@ -41,9 +42,13 @@ export default new Vuex.Store({
     setError(state, payload) {
       state.error = payload;
     },
+    setLoader(state, payload) {
+      state.loader = payload;
+    }
   },
   actions: {
     getTasks({ commit, state }) {
+      commit('setLoader', true);
       const tasks = [];
       db.collection(state.user.email)
         .get()
@@ -53,6 +58,9 @@ export default new Vuex.Store({
             task.id = doc.id;
             tasks.push(task);
           });
+          setTimeout(() => {
+            commit('setLoader', false);
+          }, 1000)
           commit("setTasks", tasks);
         });
     },

@@ -4,7 +4,14 @@
     <v-btn class="mt-3 mb-2" color="success" :to="{ name: 'addTask' }"
       >Agregar Tarea</v-btn
     >
+
+    <div class="text-center mt-6 text-overline " v-if="loader">
+      <h2>Cargando Contenido</h2>
+      <pulse-loader :loading="loading" :color="'#3f51b5'" :size="size"></pulse-loader>
+    </div>
+
     <v-data-table
+      v-if="!loader"
       :headers="headers"
       :items="tasks"
       :items-per-page="10"
@@ -42,9 +49,10 @@
 <script>
 import { mapActions, mapState } from "vuex";
 import VSnackbars from "v-snackbars";
+import PulseLoader from "vue-spinner/src/PulseLoader.vue";
 export default {
   name: "HelloWorld",
-  components: { "v-snackbars": VSnackbars },
+  components: { "v-snackbars": VSnackbars, PulseLoader: PulseLoader },
 
   created() {
     this.getTasks();
@@ -64,7 +72,7 @@ export default {
   },
 
   computed: {
-    ...mapState(["tasks", "snackBarAlerts"]),
+    ...mapState(["tasks", "snackBarAlerts", "loader"]),
   },
 };
 </script>
