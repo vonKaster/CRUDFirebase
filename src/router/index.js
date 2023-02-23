@@ -1,67 +1,65 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-import editTaskView from '../views/editTaskView.vue'
-import addTaskView from '../views/addTaskView.vue'
-import RegisterView from '../views/RegisterView.vue'
-import LoginView from '../views/LoginView.vue'
-import { auth } from '../firebase'
+import Vue from "vue";
+import VueRouter from "vue-router";
+import HomeView from "../views/HomeView.vue";
+import editTaskView from "../views/editTaskView.vue";
+import addTaskView from "../views/addTaskView.vue";
+import RegisterView from "../views/RegisterView.vue";
+import LoginView from "../views/LoginView.vue";
+import { auth } from "../firebase";
 
-
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 const routes = [
   {
-    path: '/',
-    name: 'home',
+    path: "/",
+    name: "home",
     component: HomeView,
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true },
   },
   {
-    path: '/editTask/:id',
-    name: 'editTask',
+    path: "/editTask/:id",
+    name: "editTask",
     component: editTaskView,
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true },
   },
   {
-    path: '/addTask',
-    name: 'addTask',
+    path: "/addTask",
+    name: "addTask",
     component: addTaskView,
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true },
   },
   {
-    path: '/register',
-    name: 'register',
+    path: "/register",
+    name: "register",
     component: RegisterView,
-    meta: { background: true }
+    meta: { background: true },
   },
   {
-    path: '/login',
-    name: 'login',
+    path: "/login",
+    name: "login",
     component: LoginView,
-    meta: { background: true }
+    meta: { background: true },
   },
-]
+];
 
 const router = new VueRouter({
-  mode: 'history',
+  mode: "history",
   base: process.env.BASE_URL,
-  routes
-})
+  routes,
+});
 
 router.beforeEach((to, from, next) => {
-  if(to.matched.some(record => record.meta.requiresAuth)){
-    const user = auth.currentUser
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    const user = auth.currentUser;
 
-    if(!user) {
-      next({path: '/login'})
+    if (!user) {
+      next({ path: "/login" });
     } else {
-      next()
+      next();
     }
-
   } else {
-    next()
+    next();
   }
-})
+});
 
-export default router
+export default router;

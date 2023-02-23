@@ -39,6 +39,10 @@ export default {
     };
   },
 
+  created() {
+    document.title = "CRUD | Agregar Tarea";
+  },
+
   computed: {
     ...mapState(["snackBarAlerts"]),
   },

@@ -28,6 +28,7 @@ export default {
   },
 
   created() {
+    document.title = "CRUD | Editar Tarea";
     this.getTask(this.id);
   },
 

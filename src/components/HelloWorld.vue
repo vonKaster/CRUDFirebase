@@ -1,7 +1,9 @@
 <template>
   <v-container class="mx-auto text-center">
     <h1>Simple CRUD | Firebase</h1>
-    <v-btn class="mt-3 mb-2" color="success" :to="{ name: 'addTask' }">Agregar Tarea</v-btn>
+    <v-btn class="mt-3 mb-2" color="success" :to="{ name: 'addTask' }"
+      >Agregar Tarea</v-btn
+    >
     <v-data-table
       :headers="headers"
       :items="tasks"
@@ -21,7 +23,10 @@
       </template>
       <!-- Estilo personalizado para encabezado -->
       <template slot="headerCell" slot-scope="props">
-        <div class="v-data-table__header v-data-table__thead" :style="{ textAlign: props.align }">
+        <div
+          class="v-data-table__header v-data-table__thead"
+          :style="{ textAlign: props.align }"
+        >
           {{ props.header.text }}
         </div>
       </template>

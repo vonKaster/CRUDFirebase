@@ -1,6 +1,6 @@
 import firebase from "firebase/app";
-import 'firebase/firestore';
-import 'firebase/auth';
+import "firebase/firestore";
+import "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAruA02UfLyLOUo3Y6PmZWa4oPPeVS55OQ",
@@ -8,7 +8,7 @@ const firebaseConfig = {
   projectId: "crudfirebase-d3063",
   storageBucket: "crudfirebase-d3063.appspot.com",
   messagingSenderId: "732639291049",
-  appId: "1:732639291049:web:25927ff594f8b7f0de6bb8"
+  appId: "1:732639291049:web:25927ff594f8b7f0de6bb8",
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -19,4 +19,10 @@ const GoogleAuthProvider = firebase.auth.GoogleAuthProvider;
 const FacebookAuthProvider = firebase.auth.FacebookAuthProvider;
 const GithubAuthProvider = firebase.auth.GithubAuthProvider;
 
-export { db, auth, GoogleAuthProvider, FacebookAuthProvider, GithubAuthProvider };
+export {
+  db,
+  auth,
+  GoogleAuthProvider,
+  FacebookAuthProvider,
+  GithubAuthProvider,
+};

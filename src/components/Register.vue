@@ -50,6 +50,7 @@ export default {
   },
 
   created() {
+    document.title = "CRUD | Registro";
     const style = document.createElement("style");
     style.setAttribute("id", "custom-main-style");
     style.textContent = `

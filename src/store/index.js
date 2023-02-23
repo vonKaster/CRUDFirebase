@@ -1,20 +1,25 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-import { db, auth, GoogleAuthProvider, FacebookAuthProvider, GithubAuthProvider } from '../firebase'
-import router from '../router'
+import Vue from "vue";
+import Vuex from "vuex";
+import {
+  db,
+  auth,
+  GoogleAuthProvider,
+  FacebookAuthProvider,
+  GithubAuthProvider,
+} from "../firebase";
+import router from "../router";
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
 export default new Vuex.Store({
-  state: { 
+  state: {
     tasks: [],
-    task: {name: '', id: ''},
+    task: { name: "", id: "" },
     snackBarAlerts: [],
     user: null,
-    error: null
+    error: null,
   },
-  getters: {
-  },
+  getters: {},
   mutations: {
     setTasks(state, payload) {
       state.tasks = payload;
@@ -23,7 +28,7 @@ export default new Vuex.Store({
       state.task = payload;
     },
     setDeleteTask(state, payload) {
-      state.tasks = state.tasks.filter(task => task.id !== payload)
+      state.tasks = state.tasks.filter((task) => task.id !== payload);
     },
     setSnackBarAlert(state, payload) {
       console.log(payload);
@@ -35,146 +40,155 @@ export default new Vuex.Store({
     },
     setError(state, payload) {
       state.error = payload;
-    }
+    },
   },
   actions: {
-    getTasks({commit, state}){
-      const tasks = []
-      db.collection(state.user.email).get()
-      .then(res => {
-        res.forEach(doc => { 
-          let task = doc.data()
-          task.id = doc.id
-          tasks.push(task)
+    getTasks({ commit, state }) {
+      const tasks = [];
+      db.collection(state.user.email)
+        .get()
+        .then((res) => {
+          res.forEach((doc) => {
+            let task = doc.data();
+            task.id = doc.id;
+            tasks.push(task);
+          });
+          commit("setTasks", tasks);
+        });
+    },
+    getTask({ commit, state }, id) {
+      db.collection(state.user.email)
+        .doc(id)
+        .get()
+        .then((doc) => {
+          let task = doc.data();
+          task.id = doc.id;
+          commit("setTask", task);
+        });
+    },
+    editTask({ commit, state }, task) {
+      db.collection(state.user.email)
+        .doc(task.id)
+        .update({
+          name: task.name,
         })
-        commit('setTasks', tasks)
-      })
-    },
-    getTask({commit, state}, id) {
-      db.collection(state.user.email).doc(id).get()
-      .then(doc => {
-        let task = doc.data()
-        task.id = doc.id
-        commit('setTask', task)
-      })
-    },
-    editTask({commit, state}, task) {
-      db.collection(state.user.email).doc(task.id).update({
-        name: task.name
-      })
-      .then(() => {
-        router.push('/');
-        commit('setSnackBarAlert', {
-          message: `Tarea editada con éxito`,
-          color: "green",
-          timeout: 5000,
+        .then(() => {
+          router.push("/");
+          commit("setSnackBarAlert", {
+            message: `Tarea editada con éxito`,
+            color: "green",
+            timeout: 5000,
+          });
         });
-      })
     },
-    addTask({commit, state}, taskName) {
-      db.collection(state.user.email).add({
-        name: taskName
-      })
-      .then (doc => {
-        router.push('/');
-        commit('setSnackBarAlert', {
-          message: `Tarea agregada con éxito`,
-          color: "green",
-          timeout: 5000,
-        });
-      })
-    },
-    deleteTask({commit, state}, id) {
-      db.collection(state.user.email).doc(id).delete()
-      .then(() => {
-        commit('setDeleteTask', id);
-        console.log(this.snackBarAlerts);
-        commit('setSnackBarAlert', {
-          message: `Tarea eliminada con éxito`,
-          color: "green",
-          timeout: 5000,
-        });
-      })
-    },
-    createUser({commit}, credentials) {
-      auth.createUserWithEmailAndPassword(credentials.email, credentials.passwd)
-      .then(res => {
-        console.log(res);
-        const createdUser = {
-          email: res.user.email,
-          uid: res.additionalUserInfo.uid
-        }
-
-        db.collection(res.user.email).add({
-          name: 'tarea de ejemplo'
-        }).then(dic => {
-          commit('setUser', createdUser)
-          router.push('/')
+    addTask({ commit, state }, taskName) {
+      db.collection(state.user.email)
+        .add({
+          name: taskName,
         })
-        .catch(err => console.log(err))
-      })
-      .catch(err => {
-        console.log(err);
-        commit('setError', err)
-      })
+        .then((doc) => {
+          router.push("/");
+          commit("setSnackBarAlert", {
+            message: `Tarea agregada con éxito`,
+            color: "green",
+            timeout: 5000,
+          });
+        });
+    },
+    deleteTask({ commit, state }, id) {
+      db.collection(state.user.email)
+        .doc(id)
+        .delete()
+        .then(() => {
+          commit("setDeleteTask", id);
+          console.log(this.snackBarAlerts);
+          commit("setSnackBarAlert", {
+            message: `Tarea eliminada con éxito`,
+            color: "green",
+            timeout: 5000,
+          });
+        });
+    },
+    createUser({ commit }, credentials) {
+      auth
+        .createUserWithEmailAndPassword(credentials.email, credentials.passwd)
+        .then((res) => {
+          console.log(res);
+          const createdUser = {
+            email: res.user.email,
+            uid: res.additionalUserInfo.uid,
+          };
+          db.collection(res.user.email)
+            .add({
+              name: "tarea de ejemplo",
+            })
+            .then((dic) => {
+              commit("setUser", createdUser);
+              router.push("/");
+            })
+            .catch((err) => console.log(err));
+        })
+        .catch((err) => {
+          console.log(err);
+          commit("setError", err);
+        });
     },
     signIn({ commit }, { provider, credentials }) {
       console.log(credentials);
       let authPromise = null;
-      if (provider === 'email') {
-        authPromise = auth.signInWithEmailAndPassword(credentials.email, credentials.passwd);
-      } else if (provider === 'google') {
+      if (provider === "email") {
+        authPromise = auth.signInWithEmailAndPassword(
+          credentials.email,
+          credentials.passwd
+        );
+      } else if (provider === "google") {
         const provider = new GoogleAuthProvider();
         authPromise = auth.signInWithPopup(provider);
-      } else if (provider === 'facebook') {
+      } else if (provider === "facebook") {
         const provider = new FacebookAuthProvider();
         authPromise = auth.signInWithPopup(provider);
-      } else if (provider === 'github') {
+      } else if (provider === "github") {
         const provider = new GithubAuthProvider();
         authPromise = auth.signInWithPopup(provider);
       } else {
-        console.error('Invalid provider');
+        console.error("Invalid provider");
         return;
       }
-    
+
       authPromise
-        .then(res => {
-          console.log(res)
+        .then((res) => {
+          console.log(res);
           const userLoggedIn = {
             email: res.user.email,
-            uid: res.additionalUserInfo.uid
-          }
-          commit('setUser', userLoggedIn )
-          router.push('/')
+            uid: res.additionalUserInfo.uid,
+          };
+          commit("setUser", userLoggedIn);
+          router.push("/");
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
-          commit('setError', err);
-        })
+          commit("setError", err);
+        });
     },
-    
-    
-    signOut({commit}) {
-      auth.signOut()
-      .then(() => {
-        router.push('/login')
-      })
+
+    signOut({ commit }) {
+      auth.signOut().then(() => {
+        router.push("/login");
+      });
     },
-    detectUser({commit}, user) {
-      commit('setUser', user);
+    detectUser({ commit }, user) {
+      commit("setUser", user);
     },
   },
 
   getters: {
-    userExists(state){
-      if(state.user === null) {
-        return false
+    userExists(state) {
+      if (state.user === null) {
+        return false;
       } else {
-        return true
+        return true;
       }
-    }
+    },
   },
-  modules: {
-  },
-  
-})
+  modules: {},
+});

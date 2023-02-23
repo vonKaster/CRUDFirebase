@@ -1,27 +1,21 @@
 <template>
-    <addTask></addTask>
+  <addTask></addTask>
 </template>
 
 <script>
-import addTask from '@/components/addTask.vue';
+import addTask from "@/components/addTask.vue";
 export default {
-    name: 'addTaskView',
-    components: {
-        addTask
-    },
+  name: "addTaskView",
+  components: {
+    addTask,
+  },
 
-    data() {
-        return {
-            
-        };
-    },
+  data() {
+    return {};
+  },
 
-    mounted() {
-        
-    },
+  mounted() {},
 
-    methods: {
-        
-    },
+  methods: {},
 };
 </script>

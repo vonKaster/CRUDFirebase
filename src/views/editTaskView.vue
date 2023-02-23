@@ -3,11 +3,11 @@
 </template>
 
 <script>
-import editTask from '../components/editTask';
+import editTask from "../components/editTask";
 export default {
   name: "editTaskView",
   components: {
-      editTask,
-    },
+    editTask,
+  },
 };
 </script>
