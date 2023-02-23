@@ -75,6 +75,7 @@ export default new Vuex.Store({
         });
     },
     editTask({ commit, state }, task) {
+      commit('setLoader', true);
       db.collection(state.user.email)
         .doc(task.id)
         .update({
@@ -87,9 +88,13 @@ export default new Vuex.Store({
             color: "green",
             timeout: 5000,
           });
+          setTimeout(() => {
+            commit('setLoader', false);
+          }, 1000)
         });
     },
     addTask({ commit, state }, taskName) {
+      commit('setLoader', true);
       db.collection(state.user.email)
         .add({
           name: taskName,
@@ -101,6 +106,9 @@ export default new Vuex.Store({
             color: "green",
             timeout: 5000,
           });
+          setTimeout(() => {
+            commit('setLoader', false);
+          }, 1000)
         });
     },
     deleteTask({ commit, state }, id) {

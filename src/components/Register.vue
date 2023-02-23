@@ -4,20 +4,20 @@
       <v-container class="formLoginContainer">
         <h1 class="text-center">Registro</h1>
         <br />
-        <v-form @submit.prevent="createUser({ email: email, passwd: passwd })">
+        <v-form @submit.prevent="createUser({ email: $v.email.$model, passwd: $v.passwd.$model })">
           <v-text-field
             append-icon="mdi-account"
             outlined
             type="email"
             placeholder="Ingrese su correo electŕonico"
-            v-model="email"
+            v-model="$v.email.$model"
           />
           <v-text-field
             append-icon="mdi-lock"
             outlined
             type="password"
             placeholder="Ingrese su contraseña"
-            v-model="passwd"
+            v-model="$v.passwd.$model"
           />
           <v-text-field
             append-icon="mdi-lock-check"
@@ -26,8 +26,47 @@
             placeholder="Repita su contraseña"
             v-model="passwdConfirm"
           />
-          <v-btn :disabled="!validatePasswd" color="success" type="submit"
-            >Enviar</v-btn
+          <div id="eMailErrors">
+            <small
+              v-if="!$v.email.required"
+              class="text-overline"
+              style="color: #3f51b5"
+              >email Requerido *</small
+            >
+            <small
+              v-if="!$v.email.email"
+              class="text-overline"
+              style="color: #3f51b5"
+              >Email no válido *</small
+            >
+          </div>
+
+          <div id="passwdErrors">
+            <small
+              v-if="!$v.passwd.required"
+              class="text-overline"
+              style="color: #3f51b5"
+              >Contraseña requerida *</small
+            >
+            <small
+              v-if="!$v.passwd.minLength"
+              class="text-overline"
+              style="color: #3f51b5"
+              >debe contener al menos 6 caracteres*</small
+            >
+          </div>
+
+          <div id="passwdConfirmErrors">
+            <small
+              v-if="!$v.passwdConfirm.sameAs"
+              class="text-overline"
+              style="color: #3f51b5"
+              >Las contraseñas no coinciden</small
+            >
+          </div>
+
+          <v-btn color="indigo" style="color: #ffffff" type="submit"
+            >Registrarse</v-btn
           >
         </v-form>
         <p>{{ error }}</p>
@@ -38,6 +77,7 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
+import { required, minLength, email, sameAs } from "vuelidate/lib/validators";
 export default {
   name: "Register",
 
@@ -62,6 +102,24 @@ export default {
     document.head.appendChild(style);
   },
 
+  mounted() {
+    const emailInputDetails = document.querySelector(".v-messages__wrapper");
+    const passwdInputDetails = document.querySelectorAll(
+      ".v-messages__wrapper"
+    )[1];
+    const passwdConfirmInputDetails = document.querySelectorAll(
+      ".v-messages__wrapper"
+    )[2];
+    if (emailInputDetails && passwdInputDetails && passwdConfirmInputDetails) {
+      const eMailErrors = document.getElementById("eMailErrors");
+      const passwdErrors = document.getElementById("passwdErrors");
+      const passwdConfirmErrors = document.getElementById("passwdConfirmErrors");
+      emailInputDetails.replaceWith(eMailErrors);
+      passwdInputDetails.replaceWith(passwdErrors);
+      passwdConfirmInputDetails.replaceWith(passwdConfirmErrors);
+    }
+  },
+
   beforeDestroy() {
     const style = document.getElementById("custom-main-style");
     if (style) {
@@ -75,14 +133,12 @@ export default {
 
   computed: {
     ...mapState(["error"]),
+  },
 
-    validatePasswd() {
-      return (
-        this.passwd === this.passwdConfirm &&
-        this.passwd.trim() !== "" &&
-        this.passwd.length > 5
-      );
-    },
+  validations: {
+    email: { required, email },
+    passwd: { required, minLength: minLength(6) },
+    passwdConfirm: {sameAs:sameAs('passwd')}
   },
 };
 </script>

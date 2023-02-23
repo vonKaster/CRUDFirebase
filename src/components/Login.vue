@@ -8,7 +8,7 @@
           @submit.prevent="
             signIn({
               provider: 'email',
-              credentials: { email: email, passwd: passwd },
+              credentials: { email: $v.email.$model, passwd: $v.passwd.$model },
             })
           "
         >
@@ -16,18 +16,54 @@
             outlined
             type="email"
             placeholder="Ingrese su correo electŕonico"
-            v-model="email"
+            v-model="$v.email.$model"
             append-icon="mdi-account"
           />
           <v-text-field
             outlined
             type="password"
             placeholder="Ingrese su contraseña"
-            v-model="passwd"
+            v-model="$v.passwd.$model"
             append-icon="mdi-lock"
           />
-          <v-btn dark color="#3f51b5" type="submit">Ingresar</v-btn>
+          <div id="eMailErrors">
+            <small
+              v-if="!$v.email.required"
+              class="text-overline"
+              style="color: #3f51b5"
+              >email Requerido *</small
+            >
+            <small
+              v-if="!$v.email.email"
+              class="text-overline"
+              style="color: #3f51b5"
+              >Email no válido *</small
+            >
+          </div>
+
+          <div id="passwdErrors">
+            <small
+              v-if="!$v.passwd.required"
+              class="text-overline"
+              style="color: #3f51b5"
+              >Contraseña requerida *</small
+            >
+            <small
+              v-if="!$v.passwd.minLength"
+              class="text-overline"
+              style="color: #3f51b5"
+              >Las contraseñas contienen al menos 6 caracteres *</small
+            >
+          </div>
+          <v-btn
+            :disabled="$v.$invalid"
+            style="color: #ffffff"
+            color="#3f51b5"
+            type="submit"
+            >Ingresar</v-btn
+          >
         </v-form>
+
         <p class="text-center mt-4">{{ error }}</p>
         <v-divider :thickness="4"></v-divider>
         <v-container>
@@ -62,6 +98,8 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
+import { required, minLength, email } from "vuelidate/lib/validators";
+
 export default {
   name: "Login",
 
@@ -70,6 +108,19 @@ export default {
       email: "",
       passwd: "",
     };
+  },
+
+  mounted() {
+    const emailInputDetails = document.querySelector(".v-messages__wrapper");
+    const passwdInputDetails = document.querySelectorAll(
+      ".v-messages__wrapper"
+    )[1];
+    if (emailInputDetails && passwdInputDetails) {
+      const eMailErrors = document.getElementById("eMailErrors");
+      const passwdErrors = document.getElementById("passwdErrors");
+      emailInputDetails.replaceWith(eMailErrors);
+      passwdInputDetails.replaceWith(passwdErrors);
+    }
   },
 
   created() {
@@ -98,6 +149,11 @@ export default {
 
   methods: {
     ...mapActions(["signIn"]),
+  },
+
+  validations: {
+    email: { required, email },
+    passwd: { required, minLength: minLength(6) },
   },
 };
 </script>

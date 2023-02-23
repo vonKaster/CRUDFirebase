@@ -6,15 +6,31 @@
     <v-container class="editTaskContainer elevation-1">
       <div class="pa-4">
         <h1 class="text-center">Agregar Tarea</h1>
-        <v-form @submit.prevent="addTask(name)">
+        <v-form @submit.prevent="addTask($v.name.$model)">
           <v-text-field
             append-icon="mdi-note-plus"
             class="mt-3"
             outlined
             label="Nombre"
-            v-model="name"
+            v-model="$v.name.$model"
           />
-          <v-btn color="success" type="submit">Agregar</v-btn>
+          <div id="errors">
+            <small
+              v-if="!$v.name.required"
+              class="text-overline"
+              style="color: #ff5252"
+              >Campo Requerido *</small
+            >
+            <small
+              v-if="!$v.name.minLength"
+              class="text-overline"
+              style="color: #ff5252"
+              >Debe tener al menos 5 caracteres *</small
+            >
+          </div>
+          <v-btn color="success" type="submit" :disabled="$v.$invalid || loader"
+            >Agregar</v-btn
+          >
         </v-form>
       </div>
     </v-container>
@@ -29,6 +45,7 @@
 <script>
 import { mapActions, mapState } from "vuex";
 import VSnackbars from "v-snackbars";
+import { required, minLength } from "vuelidate/lib/validators";
 export default {
   name: "addTask",
   components: { "v-snackbars": VSnackbars },
@@ -39,16 +56,37 @@ export default {
     };
   },
 
+  mounted() {
+    const messagesWrapper = document.querySelector(".v-messages__wrapper");
+    if (messagesWrapper) {
+      const errors = document.getElementById("errors");
+      messagesWrapper.replaceWith(errors);
+    }
+  },
+
   created() {
     document.title = "CRUD | Agregar Tarea";
   },
 
   computed: {
-    ...mapState(["snackBarAlerts"]),
+    ...mapState(["snackBarAlerts", "loader"]),
   },
 
   methods: {
     ...mapActions(["addTask"]),
   },
+
+  validations: {
+    name: {
+      required,
+      minLength: minLength(5),
+    },
+  },
 };
 </script>
+
+<style scoped>
+.required-text {
+  color: #ff5252;
+}
+</style>

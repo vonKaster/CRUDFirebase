@@ -7,7 +7,7 @@
 
     <div class="text-center mt-6 text-overline " v-if="loader">
       <h2>Cargando Contenido</h2>
-      <pulse-loader :loading="loading" :color="'#3f51b5'" :size="size"></pulse-loader>
+      <pulse-loader :color="'#3f51b5'"></pulse-loader>
     </div>
 
     <v-data-table
@@ -28,7 +28,6 @@
           ><v-icon class="mr-1">mdi-delete</v-icon>Eliminar</v-btn
         >
       </template>
-      <!-- Estilo personalizado para encabezado -->
       <template slot="headerCell" slot-scope="props">
         <div
           class="v-data-table__header v-data-table__thead"
@@ -51,12 +50,12 @@ import { mapActions, mapState } from "vuex";
 import VSnackbars from "v-snackbars";
 import PulseLoader from "vue-spinner/src/PulseLoader.vue";
 export default {
-  name: "HelloWorld",
+  name: "HomeComponent",
   components: { "v-snackbars": VSnackbars, PulseLoader: PulseLoader },
 
   created() {
     this.getTasks();
-    document.title = "Digicard | SimpleCRUD";
+    document.title = "Digicard | Inicio";
   },
 
   data: () => ({

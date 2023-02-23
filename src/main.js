@@ -5,9 +5,10 @@ import store from "./store";
 import vuetify from "./plugins/vuetify";
 import VueMeta from "vue-meta";
 import { auth } from "./firebase";
-import Vuelidate from "vuelidate";
+import Vuelidate from 'vuelidate'
 
-Vue.use(VueMeta, Vuelidate);
+Vue.use(VueMeta);
+Vue.use(Vuelidate);
 Vue.config.productionTip = false;
 
 auth.onAuthStateChanged((user) => {

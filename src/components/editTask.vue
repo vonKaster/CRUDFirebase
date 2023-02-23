@@ -8,8 +8,22 @@
         <h1 class="text-center">Editar Tarea</h1>
         <h4 class="text-overline text-center mb-2">ID: {{ task.id }}</h4>
         <v-form @submit.prevent="editTask(task)">
-          <v-text-field outlined v-model="task.name" />
-          <v-btn color="warning" type="submit">Editar</v-btn>
+          <v-text-field outlined v-model="$v.task.name.$model" />
+          <div id="errors">
+            <small
+              v-if="!$v.task.name.required"
+              class="text-overline"
+              style="color: #ff5252"
+              >Campo Requerido *</small
+            >
+            <small
+              v-if="!$v.task.name.minLength"
+              class="text-overline"
+              style="color: #ff5252"
+              >Debe tener al menos 5 caracteres *</small
+            >
+          </div>
+          <v-btn :disabled="$v.$invalid || loader" color="warning" type="submit">Editar</v-btn>
         </v-form>
       </div>
     </v-container>
@@ -18,6 +32,7 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
+import { required, minLength } from "vuelidate/lib/validators";
 export default {
   name: "editTask",
 
@@ -25,6 +40,14 @@ export default {
     return {
       id: this.$route.params.id,
     };
+  },
+
+  mounted() {
+    const messagesWrapper = document.querySelector(".v-messages__wrapper");
+    if (messagesWrapper) {
+      const errors = document.getElementById("errors");
+      messagesWrapper.replaceWith(errors);
+    }
   },
 
   created() {
@@ -37,7 +60,13 @@ export default {
   },
 
   computed: {
-    ...mapState(["task"]),
+    ...mapState(["task", "loader"]),
+  },
+
+  validations: {
+    task: {
+      name: { required, minLength: minLength(5) },
+    },
   },
 };
 </script>
