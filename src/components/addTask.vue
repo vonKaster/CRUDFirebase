@@ -8,6 +8,7 @@
         <h1 class="text-center">Agregar Tarea</h1>
         <v-form @submit.prevent="addTask($v.name.$model)">
           <v-text-field
+            color="indigo"
             append-icon="mdi-note-plus"
             class="mt-3"
             outlined
@@ -28,7 +29,11 @@
               >Debe tener al menos 5 caracteres *</small
             >
           </div>
-          <v-btn color="success" type="submit" :disabled="$v.$invalid || loader"
+          <v-btn
+            color="indigo"
+            style="color: #ffffff"
+            type="submit"
+            :disabled="$v.$invalid || loader"
             >Agregar</v-btn
           >
         </v-form>

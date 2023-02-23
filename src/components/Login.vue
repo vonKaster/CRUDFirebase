@@ -13,6 +13,7 @@
           "
         >
           <v-text-field
+            color="indigo"
             outlined
             type="email"
             placeholder="Ingrese su correo electŕonico"
@@ -20,6 +21,7 @@
             append-icon="mdi-account"
           />
           <v-text-field
+            color="indigo"
             outlined
             type="password"
             placeholder="Ingrese su contraseña"
@@ -63,8 +65,20 @@
             >Ingresar</v-btn
           >
         </v-form>
-
-        <p class="text-center mt-4">{{ error }}</p>
+        <p
+          v-if="error === 'auth/user-not-found'"
+          style="color: #ff5252"
+          class="text-center mt-4 text-overline"
+        >
+          Usuario Incorrecto
+        </p>
+        <p
+          v-if="error === 'auth/wrong-password'"
+          style="color: #ff5252"
+          class="text-center mt-4 text-overline"
+        >
+          Contraseña incorrecta
+        </p>
         <v-divider :thickness="4"></v-divider>
         <v-container>
           <div class="mx-auto text-center">

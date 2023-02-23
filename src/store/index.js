@@ -18,7 +18,8 @@ export default new Vuex.Store({
     snackBarAlerts: [],
     user: null,
     error: null,
-    loader: false
+    loader: false,
+    searchText: ""
   },
   getters: {},
   mutations: {
@@ -125,6 +126,10 @@ export default new Vuex.Store({
           });
         });
     },
+    searchTasks({commit, state}, payload) {
+      console.log(payload);
+      state.searchText = payload.toLowerCase();
+    },
     createUser({ commit }, credentials) {
       auth
         .createUserWithEmailAndPassword(credentials.email, credentials.passwd)
@@ -146,7 +151,7 @@ export default new Vuex.Store({
         })
         .catch((err) => {
           console.log(err);
-          commit("setError", err);
+          commit("setError", err.code);
         });
     },
     signIn({ commit }, { provider, credentials }) {
@@ -183,7 +188,7 @@ export default new Vuex.Store({
         })
         .catch((err) => {
           console.log(err);
-          commit("setError", err);
+          commit("setError", err.code);
         });
     },
 
@@ -205,6 +210,16 @@ export default new Vuex.Store({
         return true;
       }
     },
+    tasksFiltered(state){
+      let tasks = [];
+      for(let task of state.tasks) {
+        let name = task.name.toLowerCase();
+        if(name.indexOf(state.searchText) >= 0) {
+          tasks.push(task);
+        }
+      }
+      return tasks;
+    }
   },
   modules: {},
 });

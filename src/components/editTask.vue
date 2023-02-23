@@ -8,7 +8,7 @@
         <h1 class="text-center">Editar Tarea</h1>
         <h4 class="text-overline text-center mb-2">ID: {{ task.id }}</h4>
         <v-form @submit.prevent="editTask(task)">
-          <v-text-field outlined v-model="$v.task.name.$model" />
+          <v-text-field color="indigo" outlined v-model="$v.task.name.$model" />
           <div id="errors">
             <small
               v-if="!$v.task.name.required"
@@ -23,7 +23,9 @@
               >Debe tener al menos 5 caracteres *</small
             >
           </div>
-          <v-btn :disabled="$v.$invalid || loader" color="warning" type="submit">Editar</v-btn>
+          <v-btn :disabled="$v.$invalid || loader" color="warning" type="submit"
+            ><v-icon class="mr-1">mdi-note-edit</v-icon>Editar</v-btn
+          >
         </v-form>
       </div>
     </v-container>

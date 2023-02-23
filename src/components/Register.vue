@@ -4,8 +4,13 @@
       <v-container class="formLoginContainer">
         <h1 class="text-center">Registro</h1>
         <br />
-        <v-form @submit.prevent="createUser({ email: $v.email.$model, passwd: $v.passwd.$model })">
+        <v-form
+          @submit.prevent="
+            createUser({ email: $v.email.$model, passwd: $v.passwd.$model })
+          "
+        >
           <v-text-field
+            color="indigo"
             append-icon="mdi-account"
             outlined
             type="email"
@@ -13,6 +18,7 @@
             v-model="$v.email.$model"
           />
           <v-text-field
+            color="indigo"
             append-icon="mdi-lock"
             outlined
             type="password"
@@ -20,6 +26,7 @@
             v-model="$v.passwd.$model"
           />
           <v-text-field
+            color="indigo"
             append-icon="mdi-lock-check"
             outlined
             type="password"
@@ -68,8 +75,14 @@
           <v-btn color="indigo" style="color: #ffffff" type="submit"
             >Registrarse</v-btn
           >
+          <p
+            v-if="error === 'auth/email-already-in-use'"
+            style="color: #ff5252"
+            class="text-center mt-4 text-overline"
+          >
+            Ese email ya se encuentra asociado a una cuenta
+          </p>
         </v-form>
-        <p>{{ error }}</p>
       </v-container>
     </v-row>
   </v-container>
@@ -113,7 +126,9 @@ export default {
     if (emailInputDetails && passwdInputDetails && passwdConfirmInputDetails) {
       const eMailErrors = document.getElementById("eMailErrors");
       const passwdErrors = document.getElementById("passwdErrors");
-      const passwdConfirmErrors = document.getElementById("passwdConfirmErrors");
+      const passwdConfirmErrors = document.getElementById(
+        "passwdConfirmErrors"
+      );
       emailInputDetails.replaceWith(eMailErrors);
       passwdInputDetails.replaceWith(passwdErrors);
       passwdConfirmInputDetails.replaceWith(passwdConfirmErrors);
@@ -138,7 +153,7 @@ export default {
   validations: {
     email: { required, email },
     passwd: { required, minLength: minLength(6) },
-    passwdConfirm: {sameAs:sameAs('passwd')}
+    passwdConfirm: { sameAs: sameAs("passwd") },
   },
 };
 </script>
