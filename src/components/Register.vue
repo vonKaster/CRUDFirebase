@@ -11,11 +11,19 @@
         >
           <v-text-field
             color="indigo"
-            append-icon="mdi-account"
+            append-icon="mdi-email"
             outlined
             type="email"
             placeholder="Ingrese su correo electŕonico"
             v-model="$v.email.$model"
+          />
+          <v-text-field
+            color="indigo"
+            append-icon="mdi-account"
+            outlined
+            type="text"
+            placeholder="Ingrese un usuario"
+            v-model="$v.name.$model"
           />
           <v-text-field
             color="indigo"
@@ -72,7 +80,7 @@
             >
           </div>
 
-          <v-btn color="indigo" style="color: #ffffff" type="submit"
+          <v-btn :disabled="$v.$invalid" color="indigo" style="color: #ffffff" type="submit"
             >Registrarse</v-btn
           >
           <p
@@ -97,6 +105,7 @@ export default {
   data() {
     return {
       email: "",
+      name: "",
       passwd: "",
       passwdConfirm: "",
     };
@@ -124,10 +133,10 @@ export default {
     const emailInputDetails = document.querySelector(".v-messages__wrapper");
     const passwdInputDetails = document.querySelectorAll(
       ".v-messages__wrapper"
-    )[1];
+    )[2];
     const passwdConfirmInputDetails = document.querySelectorAll(
       ".v-messages__wrapper"
-    )[2];
+    )[3];
     if (emailInputDetails && passwdInputDetails && passwdConfirmInputDetails) {
       const eMailErrors = document.getElementById("eMailErrors");
       const passwdErrors = document.getElementById("passwdErrors");
@@ -157,6 +166,7 @@ export default {
 
   validations: {
     email: { required, email },
+    name: { required, minLength: minLength(3) },
     passwd: { required, minLength: minLength(6) },
     passwdConfirm: { sameAs: sameAs("passwd") },
   },

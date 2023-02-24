@@ -15,8 +15,10 @@ auth.onAuthStateChanged((user) => {
   if (user) {
     console.log(user);
     const detectedUser = {
+      name: user.displayName,
       email: user.email,
       uid: user.uid,
+      photosrc: user.photoURL
     };
     store.dispatch("detectUser", detectedUser);
   } else {

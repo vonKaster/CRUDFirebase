@@ -33,9 +33,7 @@ export default new Vuex.Store({
       state.tasks = state.tasks.filter((task) => task.id !== payload);
     },
     setSnackBarAlert(state, payload) {
-      console.log(payload);
       state.snackBarAlerts.push(payload);
-      console.log(state.snackBarAlerts);
     },
     setUser(state, payload) {
       state.user = payload;
@@ -118,7 +116,6 @@ export default new Vuex.Store({
         .delete()
         .then(() => {
           commit("setDeleteTask", id);
-          console.log(this.snackBarAlerts);
           commit("setSnackBarAlert", {
             message: `Tarea eliminada con éxito`,
             color: "green",
@@ -127,7 +124,6 @@ export default new Vuex.Store({
         });
     },
     searchTasks({commit, state}, payload) {
-      console.log(payload);
       state.searchText = payload.toLowerCase();
     },
     createUser({ commit }, credentials) {
@@ -135,14 +131,19 @@ export default new Vuex.Store({
         .createUserWithEmailAndPassword(credentials.email, credentials.passwd)
         .then((res) => {
           console.log(res);
+          auth.currentUser.updateProfile({
+            displayName: 'Prueba',
+            photoURL: 'https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/271deea8-e28c-41a3-aaf5-2913f5f48be6/de7834s-6515bd40-8b2c-4dc6-a843-5ac1a95a8b55.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzI3MWRlZWE4LWUyOGMtNDFhMy1hYWY1LTI5MTNmNWY0OGJlNlwvZGU3ODM0cy02NTE1YmQ0MC04YjJjLTRkYzYtYTg0My01YWMxYTk1YThiNTUuanBnIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.BopkDn1ptIwbmcKHdAOlYHyAOOACXW0Zfgbs0-6BY-E'
+          })
           const createdUser = {
             email: res.user.email,
             uid: res.additionalUserInfo.uid,
+            photosrc: res.photoURL
           };
-          db.collection(res.user.email)
-            .add({
-              name: "tarea de ejemplo",
+          db.collection(res.user.email).add({
+              name: "Tarea de ejemplo",
             })
+            
             .then((dic) => {
               commit("setUser", createdUser);
               router.push("/");
@@ -155,7 +156,6 @@ export default new Vuex.Store({
         });
     },
     signIn({ commit }, { provider, credentials }) {
-      console.log(credentials);
       let authPromise = null;
       if (provider === "email") {
         authPromise = auth.signInWithEmailAndPassword(
@@ -200,6 +200,7 @@ export default new Vuex.Store({
     detectUser({ commit }, user) {
       commit("setUser", user);
     },
+
   },
 
   getters: {
@@ -213,13 +214,15 @@ export default new Vuex.Store({
     tasksFiltered(state){
       let tasks = [];
       for(let task of state.tasks) {
-        let name = task.name.toLowerCase();
-        if(name.indexOf(state.searchText) >= 0) {
-          tasks.push(task);
+        if (task && task.name) {
+          let name = task.name.toLowerCase();
+          if(name.indexOf(state.searchText) >= 0) {
+            tasks.push(task);
+          }
         }
       }
       return tasks;
-    }
+    }   
   },
   modules: {},
 });

@@ -40,6 +40,12 @@
           <v-list-item
             v-if="userExists"
             class="px-5 white--text font-weight-bold"
+            :to="{ name: 'profile' }"
+            >Perfil</v-list-item
+          >
+          <v-list-item
+            v-if="userExists"
+            class="px-5 white--text font-weight-bold"
             @click="signOut()"
             >Cerrar Sesión</v-list-item
           >
@@ -55,6 +61,9 @@
         <v-btn color="indigo" text v-if="!userExists" :to="{ name: 'register' }"
           ><v-icon class="mr-1">mdi-account-plus</v-icon>Registro</v-btn
         >
+        <v-btn color="indigo" text v-if="userExists" :to="{ name: 'profile' }"
+          ><v-avatar color="#d9d9d9" size="26" class="mr-1"><img :src="user.photosrc"/></v-avatar>Perfil</v-btn
+        >
         <v-btn @click="signOut()" text v-if="userExists" color="red"
           ><v-icon class="mr-1">mdi-logout</v-icon>cerrar sesión</v-btn
         >
@@ -64,7 +73,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapState, mapActions, mapGetters } from "vuex";
 export default {
   name: "navBar",
   data() {
@@ -77,6 +86,7 @@ export default {
   },
   computed: {
     ...mapGetters(["userExists"]),
+    ...mapState(["user"])
   },
 };
 </script>
