@@ -79,6 +79,7 @@
         >
           Contraseña incorrecta
         </p>
+        <br>
         <v-divider :thickness="4"></v-divider>
         <v-container>
           <div class="mx-auto text-center">
@@ -143,7 +144,7 @@ export default {
     style.setAttribute("id", "custom-main-style");
     style.textContent = `
       main {
-        background-image: url(https://raw.githubusercontent.com/vonKaster/CRUDFirebase/5d71b7551b98a6451962773ab466acb9ddd83bd1/src/assets/wave.svg)!important;
+        background-image: url(https://raw.githubusercontent.com/vonKaster/CRUDFirebase/1ca3a78554ba7847618bb9fb59d0f6df49e73da1/src/assets/waveLogin.svg)!important;
         background-position: bottom center;
       }
       @media (max-width: 600px) {

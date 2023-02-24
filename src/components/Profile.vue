@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-layout column align-center mt-4>
-      <v-card class="pa-8">
+      <v-card class="pa-8" width="500px">
       <v-flex>
         <div class="avatar-container" @click="openFileInput">
           <v-avatar color="#d9d9d9" size="136">
@@ -21,7 +21,8 @@
         color="indigo"
         >
         </v-text-field>
-        <h3 class="text-center mt-2">Email: {{ user.email }}</h3>
+        <h3 id="email" class="text-center text-overline"><v-icon small color="indigo">mdi-email</v-icon> {{ user.email }}</h3>
+        <h3 class="text-overline"><v-icon class="mr-2" color="indigo">mdi-note</v-icon>{{ this.tasks.length }} tareas</h3>
       </v-flex>
     </v-card>
     </v-layout>
@@ -40,7 +41,13 @@ export default {
     };
   },
 
-  mounted() {},
+  mounted() {
+    const nameDetails = document.querySelector(".v-messages__wrapper");
+    if (nameDetails) {
+      const email = document.getElementById("email");
+      nameDetails.replaceWith(email);
+    }
+  },
 
   methods: {
     openFileInput() {
@@ -66,7 +73,7 @@ export default {
   },
 
   computed: {
-    ...mapState(["user"]),
+    ...mapState(["user", "tasks"]),
   },
 };
 </script>
