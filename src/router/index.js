@@ -13,6 +13,10 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/",
+    redirect: { name: "home" }
+  },
+  {
+    path: "/home",
     name: "home",
     component: HomeView,
     meta: { requiresAuth: true },

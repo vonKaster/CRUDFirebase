@@ -2,29 +2,65 @@
   <v-container>
     <v-layout column align-center mt-4>
       <v-card class="pa-8" width="500px">
-      <v-flex>
-        <div class="avatar-container" @click="openFileInput">
-          <v-avatar color="#d9d9d9" size="136">
-            <img :src="user.photosrc" />
-            <input @change="loadImage($event)" ref="fileInput" type="file" style="display: none" />
-          </v-avatar>
-          <v-icon size="30" class="edit-icon">mdi-pencil</v-icon>
-        </div>
-      </v-flex>
-      <v-flex>
-        <v-text-field
-        v-model="user.name"
-        solo
-        dense
-        class="mt-4"
-        append-icon="mdi-pencil"
-        color="indigo"
-        >
-        </v-text-field>
-        <h3 id="email" class="text-center text-overline"><v-icon small color="indigo">mdi-email</v-icon> {{ user.email }}</h3>
-        <h3 class="text-overline"><v-icon class="mr-2" color="indigo">mdi-note</v-icon>{{ this.tasks.length }} tareas</h3>
-      </v-flex>
-    </v-card>
+        <v-flex>
+          <div class="avatar-container" @click="openFileInput">
+            <v-avatar color="#d9d9d9" size="136">
+              <img :src="user.photosrc" />
+              <input
+                @change="loadImage($event)"
+                ref="fileInput"
+                type="file"
+                style="display: none"
+              />
+            </v-avatar>
+            <v-icon size="30" class="edit-icon">mdi-pencil</v-icon>
+          </div>
+        </v-flex>
+        <v-flex>
+          <v-text-field
+            v-model="user.name"
+            solo
+            dense
+            class="mt-4"
+            append-icon="mdi-pencil"
+            color="indigo"
+            @change="changeName"
+          >
+          </v-text-field>
+          <h3 id="email" class="text-center text-overline">
+            <v-icon small color="indigo">mdi-email</v-icon> {{ user.email }}
+          </h3>
+          <h3 class="text-overline">
+            <v-icon class="mr-2" color="indigo">mdi-note</v-icon
+            >{{ this.tasks.length }} tareas
+          </h3>
+          <v-divider class="mt-3"></v-divider>
+          <h2 class="text-center mt-3">Cambiar Contraseña</h2>
+          <v-text-field
+            solo
+            dense
+            append-icon="mdi-lock"
+            color="indigo"
+            class="mt-2"
+            label="Contraseña Actual"
+          ></v-text-field>
+          <v-text-field
+            solo
+            dense
+            append-icon="mdi-lock-check"
+            color="indigo"
+            label="Nueva Contraseña"
+          ></v-text-field>
+          <v-text-field
+            solo
+            dense
+            append-icon="mdi-lock-check"
+            color="indigo"
+            label="Repita Contraseña"
+          ></v-text-field>
+          <v-btn color="indigo" style="color: #ffffff">Cambiar</v-btn>
+        </v-flex>
+      </v-card>
     </v-layout>
   </v-container>
 </template>
@@ -37,7 +73,7 @@ export default {
 
   data() {
     return {
-        file: null,
+      file: null,
     };
   },
 
@@ -53,22 +89,27 @@ export default {
     openFileInput() {
       this.$refs.fileInput.click();
     },
-    async loadImage(event){
-        this.file = event.target.files[0];
-        try {
-            const imgRef = storage.ref().child(this.user.email).child('profilePhoto');
-            const res = await imgRef.put(this.file);
-            const urlImgDownload = await imgRef.getDownloadURL();
-            console.log(urlImgDownload);
-            this.user.photosrc = urlImgDownload;
+    async loadImage(event) {
+      this.file = event.target.files[0];
+      try {
+        const imgRef = storage
+          .ref()
+          .child(this.user.email)
+          .child("profilePhoto");
+        const res = await imgRef.put(this.file);
+        const urlImgDownload = await imgRef.getDownloadURL();
+        console.log(urlImgDownload);
+        this.user.photosrc = urlImgDownload;
 
-            await auth.currentUser.updateProfile({
-            photoURL: urlImgDownload
-          })
-
-        } catch (error) {
-            console.log(error)
-        }
+        await auth.currentUser.updateProfile({
+          photoURL: urlImgDownload,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    chagneName(){
+      
     }
   },
 
@@ -90,7 +131,6 @@ export default {
   max-height: 100%;
 }
 
-
 .avatar-container:hover img {
   filter: blur(5px);
   transition: filter ease-out 0.2s;
@@ -99,7 +139,7 @@ export default {
 
 .edit-icon {
   position: absolute;
-  top: 50%;
+  top: 30%;
   left: 50%;
   transform: translate(-50%, -50%);
   font-size: 20px;

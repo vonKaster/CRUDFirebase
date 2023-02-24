@@ -61,7 +61,7 @@
         <v-btn color="indigo" text v-if="!userExists" :to="{ name: 'register' }"
           ><v-icon class="mr-1">mdi-account-plus</v-icon>Registro</v-btn
         >
-        <v-btn color="indigo" text v-if="userExists" :to="{ name: 'profile' }"
+        <v-btn color="indigo" text v-if="userExists" :to="{ path: 'profile' }"
           ><v-avatar color="#d9d9d9" size="24" class="mr-1"><img :src="user.photosrc"/></v-avatar>Perfil</v-btn
         >
         <v-btn @click="signOut()" text v-if="userExists" color="red"

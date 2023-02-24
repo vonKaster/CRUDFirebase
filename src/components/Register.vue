@@ -132,7 +132,7 @@ export default {
     style.setAttribute("id", "custom-main-style");
     style.textContent = `
     main {
-        background-image: url(https://raw.githubusercontent.com/vonKaster/CRUDFirebase/1ca3a78554ba7847618bb9fb59d0f6df49e73da1/src/assets/waveRegister.svg)!important;
+        background-image: url(https://raw.githubusercontent.com/vonKaster/CRUDFirebase/7283bc9dffd71802379d2effd29f93267bd85580/src/assets/waveRegister.svg)!important;
         background-position: bottom center;
       }
       @media (max-width: 600px) {
