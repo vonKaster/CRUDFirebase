@@ -1,6 +1,7 @@
 <template>
   <v-container>
-    <v-layout column align-center mt-5>
+    <v-layout column align-center mt-4>
+      <v-card class="pa-8">
       <v-flex>
         <div class="avatar-container" @click="openFileInput">
           <v-avatar color="#d9d9d9" size="136">
@@ -11,9 +12,18 @@
         </div>
       </v-flex>
       <v-flex>
-        <h3 class="text-center mt-2">{{ user.name }}</h3>
+        <v-text-field
+        v-model="user.name"
+        solo
+        dense
+        class="mt-4"
+        append-icon="mdi-pencil"
+        color="indigo"
+        >
+        </v-text-field>
         <h3 class="text-center mt-2">Email: {{ user.email }}</h3>
       </v-flex>
+    </v-card>
     </v-layout>
   </v-container>
 </template>
@@ -63,9 +73,16 @@ export default {
 
 <style scoped>
 .avatar-container {
-  position: relative;
-  display: inline-block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
+.avatar-container v-avatar img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
 
 .avatar-container:hover img {
   filter: blur(5px);
