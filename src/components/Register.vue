@@ -6,7 +6,7 @@
         <br />
         <v-form
           @submit.prevent="
-            createUser({ email: $v.email.$model, passwd: $v.passwd.$model })
+            createUser({ email: $v.email.$model, passwd: $v.passwd.$model, name: $v.name.$model })
           "
         >
           <v-text-field
@@ -53,6 +53,21 @@
               class="text-overline"
               style="color: #3f51b5"
               >Email no válido *</small
+            >
+          </div>
+
+          <div id="nameErrors">
+            <small
+              v-if="!$v.name.required"
+              class="text-overline"
+              style="color: #3f51b5"
+              >Nombre requerido *</small
+            >
+            <small
+              v-if="!$v.name.minLength"
+              class="text-overline"
+              style="color: #3f51b5"
+              >Tu nombre debe contener al menos 3 cararacteres *</small
             >
           </div>
 
@@ -131,21 +146,26 @@ export default {
 
   mounted() {
     const emailInputDetails = document.querySelector(".v-messages__wrapper");
+    const nameInputDetails = document.querySelectorAll(
+      ".v-messages__wrapper"
+    )[1];
     const passwdInputDetails = document.querySelectorAll(
       ".v-messages__wrapper"
     )[2];
     const passwdConfirmInputDetails = document.querySelectorAll(
       ".v-messages__wrapper"
     )[3];
-    if (emailInputDetails && passwdInputDetails && passwdConfirmInputDetails) {
+    if (emailInputDetails && passwdInputDetails && passwdConfirmInputDetails && nameInputDetails) {
       const eMailErrors = document.getElementById("eMailErrors");
       const passwdErrors = document.getElementById("passwdErrors");
       const passwdConfirmErrors = document.getElementById(
         "passwdConfirmErrors"
       );
+      const nameErrors = document.getElementById("nameErrors");
       emailInputDetails.replaceWith(eMailErrors);
       passwdInputDetails.replaceWith(passwdErrors);
       passwdConfirmInputDetails.replaceWith(passwdConfirmErrors);
+      nameInputDetails.replaceWith(nameErrors);
     }
   },
 
