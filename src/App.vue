@@ -26,8 +26,10 @@ export default {
 </script>
 
 <style>
-main {
-  padding: 96px 96px 10px 96px!important;
+@media (min-width: 768px) {
+  main {
+    padding: 96px 96px 10px 96px!important;
+  }
 }
 
 .formLoginContainer {
@@ -52,4 +54,11 @@ main {
 .editTaskContainer button {
   width: 100%;
 }
+
+@media (max-width: 600px) {
+  .editTaskContainer {
+    width: 90%!important;
+  }
+}
+
 </style>

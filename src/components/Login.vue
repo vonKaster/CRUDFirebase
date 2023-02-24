@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container class="">
     <v-row>
       <v-container class="formLoginContainer">
         <h1 class="text-center">Acceso</h1>
@@ -145,6 +145,11 @@ export default {
       main {
         background-image: url(https://raw.githubusercontent.com/vonKaster/CRUDFirebase/5d71b7551b98a6451962773ab466acb9ddd83bd1/src/assets/wave.svg)!important;
         background-position: bottom center;
+      }
+      @media (max-width: 600px) {
+        main {
+          padding-top: 168px!important;
+        }
       }
     `;
     document.head.appendChild(style);

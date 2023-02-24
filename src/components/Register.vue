@@ -107,9 +107,14 @@ export default {
     const style = document.createElement("style");
     style.setAttribute("id", "custom-main-style");
     style.textContent = `
-      main {
+    main {
         background-image: url(https://raw.githubusercontent.com/vonKaster/CRUDFirebase/5d71b7551b98a6451962773ab466acb9ddd83bd1/src/assets/wave.svg)!important;
         background-position: bottom center;
+      }
+      @media (max-width: 600px) {
+        main {
+          padding-top: 168px!important;
+        }
       }
     `;
     document.head.appendChild(style);

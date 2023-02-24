@@ -1,49 +1,51 @@
 <template>
   <v-container>
-    <v-btn color="indigo" text class="mt-4 mb-4" @click="$router.go(-1)"
-      ><v-icon>mdi-chevron-left</v-icon></v-btn
-    >
-    <v-container class="editTaskContainer elevation-1">
-      <div class="pa-4">
-        <h1 class="text-center">Agregar Tarea</h1>
-        <v-form @submit.prevent="addTask($v.name.$model)">
-          <v-text-field
-            color="indigo"
-            append-icon="mdi-note-plus"
-            class="mt-3"
-            outlined
-            label="Nombre"
-            v-model="$v.name.$model"
-          />
-          <div id="errors">
-            <small
-              v-if="!$v.name.required"
-              class="text-overline"
-              style="color: #ff5252"
-              >Campo Requerido *</small
+    <v-row>
+      <v-btn color="indigo" text class="mt-4 mb-4" @click="$router.go(-1)"
+        ><v-icon>mdi-chevron-left</v-icon></v-btn
+      >
+      <v-container class="editTaskContainer elevation-1">
+        <div class="pa-4">
+          <h1 class="text-center">Agregar Tarea</h1>
+          <v-form @submit.prevent="addTask($v.name.$model)">
+            <v-text-field
+              color="indigo"
+              append-icon="mdi-note-plus"
+              class="mt-3"
+              outlined
+              label="Nombre"
+              v-model="$v.name.$model"
+            />
+            <div id="errors">
+              <small
+                v-if="!$v.name.required"
+                class="text-overline"
+                style="color: #ff5252"
+                >Campo Requerido *</small
+              >
+              <small
+                v-if="!$v.name.minLength"
+                class="text-overline"
+                style="color: #ff5252"
+                >Debe tener al menos 5 caracteres *</small
+              >
+            </div>
+            <v-btn
+              color="indigo"
+              style="color: #ffffff"
+              type="submit"
+              :disabled="$v.$invalid || loader"
+              >Agregar</v-btn
             >
-            <small
-              v-if="!$v.name.minLength"
-              class="text-overline"
-              style="color: #ff5252"
-              >Debe tener al menos 5 caracteres *</small
-            >
-          </div>
-          <v-btn
-            color="indigo"
-            style="color: #ffffff"
-            type="submit"
-            :disabled="$v.$invalid || loader"
-            >Agregar</v-btn
-          >
-        </v-form>
-      </div>
-    </v-container>
-    <v-snackbars bottom right :objects.sync="this.snackBarAlerts">
-      <template v-slot:action="{ close }">
-        <v-btn text @click="close()">Cerrar</v-btn>
-      </template>
-    </v-snackbars>
+          </v-form>
+        </div>
+      </v-container>
+      <v-snackbars bottom right :objects.sync="this.snackBarAlerts">
+        <template v-slot:action="{ close }">
+          <v-btn text @click="close()">Cerrar</v-btn>
+        </template>
+      </v-snackbars>
+    </v-row>
   </v-container>
 </template>
 
