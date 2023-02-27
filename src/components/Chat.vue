@@ -1,66 +1,74 @@
 <template>
   <div>
-    <v-card>
-      <v-card-text>
-        <h3>Bienvenido {{ user.name }}</h3>
-      </v-card-text>
+    <div class="text-center mt-6 text-overline" v-if="loader">
+      <h2>Cargando Contenido</h2>
+      <pulse-loader :color="'#3f51b5'"></pulse-loader>
+    </div>
+    <div v-if="!loader">
+      <v-card>
+        <v-card-text>
+          <h3 style="color: black" class="text-overline">Bienvenido {{ user.name }}</h3>
+        </v-card-text>
 
-      <v-card-text style="height: 60vh; overflow: auto" v-chat-scroll>
-        <div
-          :class="message.name === user.name ? 'text-right' : 'text-left'"
-          v-for="(message, index) in messages"
-          :key="index"
-        >
-          <v-chip>
-            <v-avatar class="mr-2"> <img :src="message.photo" /> </v-avatar
-            >{{ message.message }}
-          </v-chip>
-          <p class="caption mr-2">{{ message.date }}</p>
-        </div>
-      </v-card-text>
-
-      <v-card-text>
-        <v-form @submit.prevent="sendMessage">
-          <v-text-field
-            solo
-            dense
-            required
-            append-icon="mdi-message-outline"
-            color="indigo"
-            label="Escribe tu mensaje"
-            class="mt-2"
-            v-model="message"
-          ></v-text-field>
-
-          <div id="validations">
-            <p
-              style="color: #3f51b5"
-              class="text-overline"
-              v-show="!$v.message.required"
-            >
-              El mensaje es requerido
-            </p>
-            <p
-              style="color: #3f51b5"
-              class="text-overline"
-              v-show="!$v.message.minLength"
-            >
-              El mensaje debe tener al menos 3 caracteres
-            </p>
+        <v-card-text style="height: 60vh; overflow: auto" v-chat-scroll>
+          <div
+            :class="message.uid === user.uid ? 'text-right' : 'text-left'"
+            v-for="(message, index) in messages"
+            :key="index"
+          >
+            <v-chip color="indigo" style="color: #ffffff">
+              <v-avatar class="mr-2"> <img :src="message.photo" /> </v-avatar
+              >{{ message.message }}
+            </v-chip>
+            <p class="caption mr-2">{{ message.date }}</p>
           </div>
-        </v-form>
-      </v-card-text>
-    </v-card>
+        </v-card-text>
+
+        <v-card-text style="height: 100px;">
+          <v-form @submit.prevent="sendMessage">
+            <v-text-field
+              solo
+              dense
+              required
+              append-icon="mdi-message-outline"
+              color="indigo"
+              label="Escribe tu mensaje"
+              class="mt-2"
+              v-model="message"
+            ></v-text-field>
+
+            <div id="validations">
+              <p
+                style="color: #3f51b5"
+                class="text-overline"
+                v-show="!$v.message.required"
+              >
+                El mensaje es requerido
+              </p>
+              <p
+                style="color: #3f51b5"
+                class="text-overline"
+                v-show="!$v.message.minLength"
+              >
+                El mensaje debe tener al menos 3 caracteres
+              </p>
+            </div>
+          </v-form>
+        </v-card-text>
+      </v-card>
+    </div>
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapMutations } from "vuex";
 import { required, minLength } from "vuelidate/lib/validators";
 import { db } from "../firebase";
 import moment from "moment";
+import PulseLoader from "vue-spinner/src/PulseLoader.vue";
 export default {
   name: "Chat",
+  components: { PulseLoader: PulseLoader },
 
   data() {
     return {
@@ -70,33 +78,21 @@ export default {
   },
 
   mounted() {
-    const inputDetails = document.querySelector(".v-messages__wrapper");
-    if (inputDetails) {
-      const validations = document.getElementById("validations");
-      inputDetails.replaceWith(validations);
-    }
+    this.moveValidations();
+  },
+
+  updated() {
+    this.moveValidations();
   },
 
   created() {
     document.title = "CRUD | Chat";
     moment.locale("es");
-    let ref = db.collection("chats").orderBy("date", "desc").limit(12);
-
-    ref.onSnapshot((querySnapshot) => {
-      this.messages = [];
-
-      querySnapshot.forEach((doc) => {
-        this.messages.unshift({
-            message: doc.data().message,
-            photo: doc.data().photo,
-            name: doc.data().name,
-            date: moment(doc.data().date).format('lll')
-        });
-      });
-    });
+    this.getMessages();
   },
 
   methods: {
+    ...mapMutations(["setLoader"]),
     sendMessage() {
       if (this.$v.$invalid) {
         console.log("Completa tu mensaje");
@@ -106,7 +102,7 @@ export default {
         db.collection("chats")
           .add({
             message: this.message,
-            name: this.user.name,
+            uid: this.user.uid,
             photo: this.user.photosrc,
             date: Date.now(),
           })
@@ -115,10 +111,36 @@ export default {
         this.message = null;
       }
     },
+    getMessages() {
+      this.setLoader(true);
+      let ref = db.collection("chats").orderBy("date", "desc").limit(12);
+      ref.onSnapshot((querySnapshot) => {
+        this.messages = [];
+
+        querySnapshot.forEach((doc) => {
+          this.messages.unshift({
+            message: doc.data().message,
+            photo: doc.data().photo,
+            uid: doc.data().uid,
+            date: moment(doc.data().date).format("lll"),
+          });
+        });
+      });
+      setTimeout(() => {
+        this.setLoader(false);
+      }, 1000);
+    },
+    moveValidations() {
+      const inputDetails = document.querySelector(".v-messages__wrapper");
+      if (inputDetails) {
+        const validations = document.getElementById("validations");
+        inputDetails.replaceWith(validations);
+      }
+    },
   },
 
   computed: {
-    ...mapState(["user"]),
+    ...mapState(["user", "loader"]),
   },
 
   validations: {

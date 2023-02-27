@@ -24,11 +24,13 @@
             class="mt-4"
             append-icon="mdi-pencil"
             color="indigo"
+            @focus="onFocus"
             @blur="changeUserName(user.name)"
           >
           </v-text-field>
           <h3 id="email" class="text-center text-overline">
-            <v-icon small color="indigo">mdi-email</v-icon> {{ user.email.toString() }}
+            <v-icon small color="indigo">mdi-email</v-icon>
+            {{ user.email.toString() }}
           </h3>
           <h3 class="text-overline">
             <v-icon class="mr-2" color="indigo">mdi-note</v-icon>
@@ -44,7 +46,7 @@
           </p>
           <p
             v-if="success === 'nameSuccess'"
-            style="color: #4CAF50"
+            style="color: #4caf50"
             class="text-center mt-4 text-overline"
           >
             Nombre actualizado con éxito.
@@ -114,7 +116,7 @@
             </p>
             <p
               v-if="success === 'passwdSuccess'"
-              style="color: #4CAF50"
+              style="color: #4caf50"
               class="text-center mt-4 text-overline"
             >
               Contraseña actualizada con éxito.
@@ -127,7 +129,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions, mapMutations } from "vuex";
 import { storage, auth } from "../firebase";
 import { required, minLength, sameAs } from "vuelidate/lib/validators";
 
@@ -139,6 +141,7 @@ export default {
       file: null,
       passwd: "",
       passwdConfirm: "",
+      originalValue: "",
     };
   },
 
@@ -162,12 +165,18 @@ export default {
     }
   },
 
-  created(){
+  created() {
     document.title = "CRUD | Perfil";
+  },
+
+  beforeDestroy() {
+    this.setError(null);
+    this.setSuccess(null);
   },
 
   methods: {
     ...mapActions(["changeUserName", "changePassword"]),
+    ...mapMutations(["setError", "setSuccess"]),
     openFileInput() {
       this.$refs.fileInput.click();
     },
@@ -188,6 +197,14 @@ export default {
         });
       } catch (error) {
         console.log(error);
+      }
+    },
+    onFocus() {
+      this.originalValue = this.user.name;
+    },
+    changeUserName(name) {
+      if (this.user.name !== this.originalValue) {
+        this.$store.dispatch("changeUserName", name);
       }
     },
   },
@@ -216,7 +233,7 @@ export default {
 }
 
 .avatar-container:hover img {
-  filter: blur(5px);
+  filter: blur(3px);
   transition: filter ease-out 0.2s;
   cursor: pointer;
 }
