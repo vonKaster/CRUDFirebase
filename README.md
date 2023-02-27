@@ -1,6 +1,7 @@
 # crudfirebase
 
-## https://crudfirebase-d3063.firebaseapp.com/
+## https://crudfirebase-d3063.firebaseapp.com/ (rompe ciertos estilos)
+## https://fcaminos-digicard-crudfirebase.netlify.app
 
 ## Project setup
 ```
