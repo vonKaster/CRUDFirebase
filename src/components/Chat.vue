@@ -17,8 +17,10 @@
             :key="index"
           >
             <v-chip color="indigo" style="color: #ffffff">
-              <v-avatar class="mr-2"> <img :src="message.photo" /> </v-avatar
-              >{{ message.message }}
+              <v-avatar class="mr-1"> <img :src="message.photo" /> </v-avatar
+              >
+              <h4 class="mr-1">{{ message.name }}:</h4>
+              {{ message.message }}
             </v-chip>
             <p class="caption mr-2">{{ message.date }}</p>
           </div>
@@ -101,6 +103,7 @@ export default {
 
         db.collection("chats")
           .add({
+            name: this.user.name,
             message: this.message,
             uid: this.user.uid,
             photo: this.user.photosrc,
@@ -119,6 +122,7 @@ export default {
 
         querySnapshot.forEach((doc) => {
           this.messages.unshift({
+            name: doc.data().name,
             message: doc.data().message,
             photo: doc.data().photo,
             uid: doc.data().uid,
