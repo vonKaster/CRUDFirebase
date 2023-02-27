@@ -6,9 +6,11 @@ import vuetify from "./plugins/vuetify";
 import VueMeta from "vue-meta";
 import { auth } from "./firebase";
 import Vuelidate from 'vuelidate'
+import vueChatScroll from "vue-chat-scroll";
 
 Vue.use(VueMeta);
 Vue.use(Vuelidate);
+Vue.use(vueChatScroll);
 Vue.config.productionTip = false;
 
 auth.onAuthStateChanged((user) => {

@@ -6,6 +6,7 @@ import addTaskView from "../views/addTaskView.vue";
 import RegisterView from "../views/RegisterView.vue";
 import LoginView from "../views/LoginView.vue";
 import ProfileView from "../views/ProfileView.vue";
+import ChatView from "../views/ChatView.vue";
 import { auth } from "../firebase";
 
 Vue.use(VueRouter);
@@ -49,6 +50,12 @@ const routes = [
     path: "/profile",
     name: "profile",
     component: ProfileView,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/chat",
+    name: "chat",
+    component: ChatView,
     meta: { requiresAuth: true },
   },
 ];

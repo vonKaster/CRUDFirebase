@@ -162,6 +162,10 @@ export default {
     }
   },
 
+  created(){
+    document.title = "CRUD | Perfil";
+  },
+
   methods: {
     ...mapActions(["changeUserName", "changePassword"]),
     openFileInput() {
@@ -186,7 +190,6 @@ export default {
         console.log(error);
       }
     },
-    changeName() {},
   },
 
   computed: {

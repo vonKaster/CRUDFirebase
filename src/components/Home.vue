@@ -59,7 +59,7 @@ export default {
 
   created() {
     this.getTasks();
-    document.title = "Digicard | Inicio";
+    document.title = "CRUD | Inicio";
   },
 
   data: () => ({
