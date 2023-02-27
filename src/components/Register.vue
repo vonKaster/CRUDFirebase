@@ -112,7 +112,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapState, mapMutations } from "vuex";
 import { required, minLength, email, sameAs } from "vuelidate/lib/validators";
 export default {
   name: "Register",
@@ -174,10 +174,12 @@ export default {
     if (style) {
       document.head.removeChild(style);
     }
+    this.setError(null);
   },
 
   methods: {
     ...mapActions(["createUser"]),
+    ...mapMutations(["setError"]),
   },
 
   computed: {

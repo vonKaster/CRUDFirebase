@@ -119,7 +119,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapState, mapMutations } from "vuex";
 import { required, minLength, email } from "vuelidate/lib/validators";
 
 export default {
@@ -168,6 +168,7 @@ export default {
     if (style) {
       document.head.removeChild(style);
     }
+    this.setError(null);
   },
 
   computed: {
@@ -176,6 +177,7 @@ export default {
 
   methods: {
     ...mapActions(["signIn"]),
+    ...mapMutations(["setError"]),
   },
 
   validations: {
