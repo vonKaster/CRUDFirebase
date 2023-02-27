@@ -24,41 +24,80 @@
             class="mt-4"
             append-icon="mdi-pencil"
             color="indigo"
-            @change="changeName"
+            @blur="changeUserName(user.name)"
           >
           </v-text-field>
           <h3 id="email" class="text-center text-overline">
             <v-icon small color="indigo">mdi-email</v-icon> {{ user.email }}
           </h3>
           <h3 class="text-overline">
-            <v-icon class="mr-2" color="indigo">mdi-note</v-icon
-            >{{ this.tasks.length }} tareas
+            <v-icon class="mr-2" color="indigo">mdi-note</v-icon>
+            {{ this.tasks.length }}
+            {{ this.tasks.length === 1 ? "tarea" : "tareas" }}
           </h3>
-          <v-divider class="mt-3"></v-divider>
-          <h2 class="text-center mt-3">Cambiar Contraseña</h2>
-          <v-text-field
-            solo
-            dense
-            append-icon="mdi-lock"
-            color="indigo"
-            class="mt-2"
-            label="Contraseña Actual"
-          ></v-text-field>
-          <v-text-field
-            solo
-            dense
-            append-icon="mdi-lock-check"
-            color="indigo"
-            label="Nueva Contraseña"
-          ></v-text-field>
-          <v-text-field
-            solo
-            dense
-            append-icon="mdi-lock-check"
-            color="indigo"
-            label="Repita Contraseña"
-          ></v-text-field>
-          <v-btn color="indigo" style="color: #ffffff">Cambiar</v-btn>
+          <div v-if="user.provider === 'password'">
+            <v-divider class="mt-3"></v-divider>
+            <h2 class="text-center mt-3">Cambiar Contraseña</h2>
+            <v-form @submit.prevent="changePassword($v.passwd.$model)">
+              <v-text-field
+                solo
+                dense
+                append-icon="mdi-lock"
+                color="indigo"
+                label="Nueva Contraseña"
+                class="mt-2"
+                v-model="$v.passwd.$model"
+                type="password"
+              ></v-text-field>
+              <v-text-field
+                solo
+                dense
+                append-icon="mdi-lock-check"
+                color="indigo"
+                label="Repita Contraseña"
+                v-model="$v.passwdConfirm.$model"
+                type="password"
+              ></v-text-field>
+              <div id="passwdErrors">
+                <small
+                  v-if="!$v.passwd.required"
+                  class="text-overline"
+                  style="color: #3f51b5"
+                  >Contraseña requerida *</small
+                >
+                <small
+                  v-if="!$v.passwd.minLength"
+                  class="text-overline"
+                  style="color: #3f51b5"
+                  >debe contener al menos 6 caracteres*</small
+                >
+              </div>
+
+              <div id="passwdConfirmErrors">
+                <small
+                  v-if="!$v.passwdConfirm.sameAs"
+                  class="text-overline"
+                  style="color: #3f51b5"
+                  >Las contraseñas deben coincidir</small
+                >
+              </div>
+              <v-btn
+                :disabled="$v.$invalid"
+                type="submit"
+                color="indigo"
+                style="color: #ffffff"
+                width="100%"
+                >Cambiar</v-btn
+              >
+            </v-form>
+            <p
+            v-if="error === 'auth/requires-recent-login'"
+            style="color: #ff5252"
+            class="text-center mt-4 text-overline"
+          >
+            La operación es sensible y requiere que te hayas logueado recientemente, por favor vuelve a loguearte.
+          </p>
+          </div>
         </v-flex>
       </v-card>
     </v-layout>
@@ -66,26 +105,43 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 import { storage, auth } from "../firebase";
+import { required, minLength, sameAs } from "vuelidate/lib/validators";
+
 export default {
   name: "Profile",
 
   data() {
     return {
       file: null,
+      passwd: "",
+      passwdConfirm: "",
     };
   },
 
   mounted() {
     const nameDetails = document.querySelector(".v-messages__wrapper");
-    if (nameDetails) {
+    const passwdInputDetails = document.querySelectorAll(
+      ".v-messages__wrapper"
+    )[1];
+    const passwdConfirmInputDetails = document.querySelectorAll(
+      ".v-messages__wrapper"
+    )[2];
+    if (nameDetails && passwdInputDetails && passwdConfirmInputDetails) {
       const email = document.getElementById("email");
+      const passwdErrors = document.getElementById("passwdErrors");
+      const passwdConfirmErrors = document.getElementById(
+        "passwdConfirmErrors"
+      );
       nameDetails.replaceWith(email);
+      passwdInputDetails.replaceWith(passwdErrors);
+      passwdConfirmInputDetails.replaceWith(passwdConfirmErrors);
     }
   },
 
   methods: {
+    ...mapActions(["changeUserName", "changePassword"]),
     openFileInput() {
       this.$refs.fileInput.click();
     },
@@ -108,13 +164,16 @@ export default {
         console.log(error);
       }
     },
-    chagneName(){
-      
-    }
+    changeName() {},
   },
 
   computed: {
-    ...mapState(["user", "tasks"]),
+    ...mapState(["user", "tasks", "error"]),
+  },
+
+  validations: {
+    passwd: { required, minLength: minLength(6) },
+    passwdConfirm: { sameAs: sameAs("passwd") },
   },
 };
 </script>
@@ -139,9 +198,6 @@ export default {
 
 .edit-icon {
   position: absolute;
-  top: 30%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   font-size: 20px;
   color: white;
   opacity: 0;

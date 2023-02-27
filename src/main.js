@@ -18,7 +18,8 @@ auth.onAuthStateChanged((user) => {
       name: user.displayName,
       email: user.email,
       uid: user.uid,
-      photosrc: user.photoURL
+      photosrc: user.photoURL,
+      provider: user.providerData[0].providerId
     };
     store.dispatch("detectUser", detectedUser);
   } else {

@@ -13,13 +13,13 @@
             <small
               v-if="!$v.task.name.required"
               class="text-overline"
-              style="color: #ff5252"
+              style="color: #3f51b5"
               >Campo Requerido *</small
             >
             <small
               v-if="!$v.task.name.minLength"
               class="text-overline"
-              style="color: #ff5252"
+              style="color: #3f51b5"
               >Debe tener al menos 5 caracteres *</small
             >
           </div>

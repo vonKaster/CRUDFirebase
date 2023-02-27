@@ -3,6 +3,7 @@ import Vuex from "vuex";
 import {
   db,
   auth,
+  user,
   GoogleAuthProvider,
   FacebookAuthProvider,
   GithubAuthProvider,
@@ -201,6 +202,25 @@ export default new Vuex.Store({
     detectUser({ commit }, user) {
       commit("setUser", user);
     },
+    changeUserName({ commit }, name){
+      if (name.length >= 3) {
+        auth.currentUser.updateProfile({
+          displayName: name
+        }).then(() => {
+        }).catch((error) => {
+          console.log(error)
+        });
+      } else {
+        
+      }
+    },
+    changePassword ({ commit }, newPassword) {
+      auth.currentUser.updatePassword(newPassword).then(function() {
+      }).catch(function(error) {
+        console.log(error);
+        commit("setError", error.code);
+      });
+    }
 
   },
 
