@@ -36,6 +36,20 @@
             {{ this.tasks.length === 1 ? "tarea" : "tareas" }}
           </h3>
           <div v-if="user.provider === 'password'">
+            <p
+              v-if="error === 'nameErr'"
+              style="color: #ff5252"
+              class="text-center mt-4 text-overline"
+            >
+              Debe contener entre 3 y 14 caracteres.
+            </p>
+            <p
+              v-if="success === 'nameSuccess'"
+              style="color: #4CAF50"
+              class="text-center mt-4 text-overline"
+            >
+              Nombre actualizado con éxito.
+            </p>
             <v-divider class="mt-3"></v-divider>
             <h2 class="text-center mt-3">Cambiar Contraseña</h2>
             <v-form @submit.prevent="changePassword($v.passwd.$model)">
@@ -91,12 +105,20 @@
               >
             </v-form>
             <p
-            v-if="error === 'auth/requires-recent-login'"
-            style="color: #ff5252"
-            class="text-center mt-4 text-overline"
-          >
-            La operación es sensible y requiere que te hayas logueado recientemente, por favor vuelve a loguearte.
-          </p>
+              v-if="error === 'auth/requires-recent-login'"
+              style="color: #ff5252"
+              class="text-center mt-4 text-overline"
+            >
+              La operación es sensible y requiere que te hayas logueado
+              recientemente, por favor vuelve a loguearte.
+            </p>
+            <p
+              v-if="success === 'passwdSuccess'"
+              style="color: #4CAF50"
+              class="text-center mt-4 text-overline"
+            >
+              Contraseña actualizada con éxito.
+            </p>
           </div>
         </v-flex>
       </v-card>
@@ -168,7 +190,7 @@ export default {
   },
 
   computed: {
-    ...mapState(["user", "tasks", "error"]),
+    ...mapState(["user", "tasks", "error", "success"]),
   },
 
   validations: {

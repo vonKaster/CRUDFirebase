@@ -79,6 +79,13 @@
         >
           Contraseña incorrecta
         </p>
+        <p
+          v-if="error === 'auth/too-many-requests'"
+          style="color: #ff5252"
+          class="text-center mt-4 text-overline"
+        >
+          Se congeló el acceso a esta cuenta temporalmente debido a muchos intentos fallidos.
+        </p>
         <br>
         <v-divider :thickness="4"></v-divider>
         <v-container>

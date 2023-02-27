@@ -20,7 +20,8 @@ export default new Vuex.Store({
     user: null,
     error: null,
     loader: false,
-    searchText: ""
+    searchText: "",
+    success: null,
   },
   getters: {},
   mutations: {
@@ -44,7 +45,10 @@ export default new Vuex.Store({
     },
     setLoader(state, payload) {
       state.loader = payload;
-    }
+    },
+    setSuccess(state, payload) {
+      state.success = payload;
+    },
   },
   actions: {
     getTasks({ commit, state }) {
@@ -203,19 +207,23 @@ export default new Vuex.Store({
       commit("setUser", user);
     },
     changeUserName({ commit }, name){
-      if (name.length >= 3) {
+      if (name.length >= 3 && name.length < 14) {
         auth.currentUser.updateProfile({
           displayName: name
         }).then(() => {
+          commit("setSuccess", "nameSuccess");
+          commit("setError", null);
         }).catch((error) => {
           console.log(error)
         });
       } else {
-        
+        commit("setError", "nameErr");
       }
     },
     changePassword ({ commit }, newPassword) {
       auth.currentUser.updatePassword(newPassword).then(function() {
+        commit("setError", null);
+        commit("setSuccess", "passwdSuccess");
       }).catch(function(error) {
         console.log(error);
         commit("setError", error.code);

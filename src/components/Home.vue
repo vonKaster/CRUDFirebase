@@ -5,7 +5,7 @@
       <pulse-loader :color="'#3f51b5'"></pulse-loader>
     </div>
     <div v-if="!loader">
-      <h1>Simple CRUD | Firebase</h1>
+      <h1>¡Bienvenido {{ user.name }}!</h1>
       <v-btn class="mt-3 mb-2" dark color="indigo" :to="{ name: 'addTask' }"
         ><v-icon class="mr-1">mdi-note-plus</v-icon>Agregar Tarea</v-btn
       >
@@ -76,7 +76,7 @@ export default {
   },
 
   computed: {
-    ...mapState(["tasks", "snackBarAlerts", "loader"]),
+    ...mapState(["tasks", "snackBarAlerts", "loader", "user"]),
     ...mapGetters(["tasksFiltered"])
   },
 };
