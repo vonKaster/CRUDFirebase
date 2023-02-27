@@ -28,28 +28,28 @@
           >
           </v-text-field>
           <h3 id="email" class="text-center text-overline">
-            <v-icon small color="indigo">mdi-email</v-icon> {{ user.email }}
+            <v-icon small color="indigo">mdi-email</v-icon> {{ user.email.toString() }}
           </h3>
           <h3 class="text-overline">
             <v-icon class="mr-2" color="indigo">mdi-note</v-icon>
             {{ this.tasks.length }}
             {{ this.tasks.length === 1 ? "tarea" : "tareas" }}
           </h3>
-          <div v-if="user.provider === 'password'">
-            <p
-              v-if="error === 'nameErr'"
-              style="color: #ff5252"
-              class="text-center mt-4 text-overline"
-            >
-              Debe contener entre 3 y 14 caracteres.
-            </p>
-            <p
-              v-if="success === 'nameSuccess'"
-              style="color: #4CAF50"
-              class="text-center mt-4 text-overline"
-            >
-              Nombre actualizado con éxito.
-            </p>
+          <p
+            v-if="error === 'nameErr'"
+            style="color: #ff5252"
+            class="text-center mt-4 text-overline"
+          >
+            Debe contener entre 3 y 14 caracteres.
+          </p>
+          <p
+            v-if="success === 'nameSuccess'"
+            style="color: #4CAF50"
+            class="text-center mt-4 text-overline"
+          >
+            Nombre actualizado con éxito.
+          </p>
+          <div>
             <v-divider class="mt-3"></v-divider>
             <h2 class="text-center mt-3">Cambiar Contraseña</h2>
             <v-form @submit.prevent="changePassword($v.passwd.$model)">
