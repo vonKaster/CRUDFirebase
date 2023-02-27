@@ -32,7 +32,7 @@
               solo
               dense
               required
-              append-icon="mdi-message-outline"
+              append-icon="mdi-send"
               color="indigo"
               label="Escribe tu mensaje"
               class="mt-2"
