@@ -178,25 +178,35 @@ export default {
     ...mapActions(["changeUserName", "changePassword"]),
     ...mapMutations(["setError", "setSuccess"]),
     openFileInput() {
+      this.file = null; // Reiniciar la variable de archivo
       this.$refs.fileInput.click();
     },
     async loadImage(event) {
-      this.file = event.target.files[0];
-      try {
-        const imgRef = storage
-          .ref()
-          .child(this.user.email)
-          .child("profilePhoto");
-        const res = await imgRef.put(this.file);
-        const urlImgDownload = await imgRef.getDownloadURL();
-        console.log(urlImgDownload);
-        this.user.photosrc = urlImgDownload;
+      if (event.target.files.length) {
+        this.file = event.target.files[0];
 
-        await auth.currentUser.updateProfile({
-          photoURL: urlImgDownload,
-        });
-      } catch (error) {
-        console.log(error);
+        try {
+          const imgRef = storage
+            .ref()
+            .child(this.user.email)
+            .child("profilePhoto");
+          const res = await imgRef.put(this.file);
+          const urlImgDownload = await imgRef.getDownloadURL();
+
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            this.user.photosrc = e.target.result;
+          };
+          reader.readAsDataURL(this.file);
+
+          this.user.photosrc = urlImgDownload;
+
+          await auth.currentUser.updateProfile({
+            photoURL: urlImgDownload,
+          });
+        } catch (error) {
+          console.log(error);
+        }
       }
     },
     onFocus() {

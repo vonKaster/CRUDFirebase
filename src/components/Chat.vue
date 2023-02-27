@@ -47,13 +47,6 @@
               >
                 El mensaje es requerido
               </p>
-              <p
-                style="color: #3f51b5"
-                class="text-overline"
-                v-show="!$v.message.minLength"
-              >
-                El mensaje debe tener al menos 3 caracteres
-              </p>
             </div>
           </v-form>
         </v-card-text>
@@ -64,7 +57,7 @@
 
 <script>
 import { mapState, mapMutations } from "vuex";
-import { required, minLength } from "vuelidate/lib/validators";
+import { required } from "vuelidate/lib/validators";
 import { db } from "../firebase";
 import moment from "moment";
 import PulseLoader from "vue-spinner/src/PulseLoader.vue";
@@ -148,7 +141,7 @@ export default {
   },
 
   validations: {
-    message: { required, minLength: minLength(3) },
+    message: { required },
   },
 };
 </script>
