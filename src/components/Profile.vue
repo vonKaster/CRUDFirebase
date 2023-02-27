@@ -42,7 +42,7 @@
             style="color: #ff5252"
             class="text-center mt-4 text-overline"
           >
-            Debe contener entre 3 y 14 caracteres.
+            Debe contener entre 3 y 24 caracteres.
           </p>
           <p
             v-if="success === 'nameSuccess'"

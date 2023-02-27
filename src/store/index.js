@@ -207,7 +207,7 @@ export default new Vuex.Store({
       commit("setUser", user);
     },
     changeUserName({ commit }, name){
-      if (name.length >= 3 && name.length < 14) {
+      if (name.length >= 3 && name.length < 24) {
         auth.currentUser.updateProfile({
           displayName: name
         }).then(() => {
