@@ -27,9 +27,10 @@
           </div>
         </v-card-text>
 
-        <v-card-text style="height: 120px">
+        <v-card-text :style="{ height: cardHeight, bottom: '0' }" style="background-color: #3f51b5">
           <v-form ref="form">
             <v-textarea
+              style="max-height: 260px; overflow-y: auto !important;"
               auto-grow
               rows="1"
               solo
@@ -40,9 +41,9 @@
               class="mt-2"
               v-model.trim="message"
               :rules="rules"
-              error-icon-color=""
               return-key="true"
               @keydown.enter.prevent="sendMessage"
+              @input="updateCardHeight"
             ></v-textarea>
           </v-form>
         </v-card-text>
@@ -65,6 +66,7 @@ export default {
       message: "",
       messages: [],
       rules: [(v) => !!v || "El mensaje es requerido"],
+      cardHeight: "120px",
     };
   },
 
@@ -89,6 +91,7 @@ export default {
           .catch((err) => console.log(err));
 
         this.message = null;
+        this.cardHeight = "120px";
       }
     },
     getMessages() {
@@ -111,6 +114,19 @@ export default {
         this.setLoader(false);
       }, 1000);
     },
+    updateCardHeight() {
+      const textarea = this.$refs.form.$el.querySelector("textarea");
+      const scrollHeight = textarea.scrollHeight;
+      this.cardHeight = scrollHeight > 120 ? "320px" : "120px";
+    },
+  },
+
+  watch: {
+    message(newMessage) {
+      if (newMessage === "") {
+        this.cardHeight = "120px";
+      }
+    },
   },
 
   computed: {
@@ -121,7 +137,7 @@ export default {
 
 <style>
 .v-messages__message {
-  color: #3f51b5 !important;
+  color: white !important;
   font-size: 0.75rem !important;
   font-weight: 500;
   line-height: 2rem;
