@@ -19,6 +19,7 @@
             placeholder="Ingrese su correo electŕonico"
             v-model="$v.email.$model"
             append-icon="mdi-account"
+            :rules="rulesEmail"
           />
           <v-text-field
             color="indigo"
@@ -27,36 +28,8 @@
             placeholder="Ingrese su contraseña"
             v-model="$v.passwd.$model"
             append-icon="mdi-lock"
+            :rules="rulesPasswd"
           />
-          <div id="eMailErrors">
-            <small
-              v-if="!$v.email.required"
-              class="text-overline"
-              style="color: #3f51b5"
-              >email Requerido *</small
-            >
-            <small
-              v-if="!$v.email.email"
-              class="text-overline"
-              style="color: #3f51b5"
-              >Email no válido *</small
-            >
-          </div>
-
-          <div id="passwdErrors">
-            <small
-              v-if="!$v.passwd.required"
-              class="text-overline"
-              style="color: #3f51b5"
-              >Contraseña requerida *</small
-            >
-            <small
-              v-if="!$v.passwd.minLength"
-              class="text-overline"
-              style="color: #3f51b5"
-              >Las contraseñas contienen al menos 6 caracteres *</small
-            >
-          </div>
           <v-btn
             :disabled="$v.$invalid"
             style="color: #ffffff"
@@ -84,9 +57,10 @@
           style="color: #ff5252"
           class="text-center mt-4 text-overline"
         >
-          Se congeló el acceso a esta cuenta temporalmente debido a muchos intentos fallidos.
+          Se congeló el acceso a esta cuenta temporalmente debido a muchos
+          intentos fallidos.
         </p>
-        <br>
+        <br />
         <v-divider :thickness="4"></v-divider>
         <v-container>
           <div class="mx-auto text-center">
@@ -129,20 +103,17 @@ export default {
     return {
       email: "",
       passwd: "",
+      rulesEmail: [
+        (v) => !!v || "El email es requerido",
+        (v) => /.+@.+\..+/.test(v) || "El correo electrónico no es válido",
+      ],
+      rulesPasswd: [
+        (v) => !!v || "La contraseña es requerida",
+        (v) =>
+          (v && v.length >= 6) ||
+          "La contraseña debe tener al menos 6 caracteres",
+      ],
     };
-  },
-
-  mounted() {
-    const emailInputDetails = document.querySelector(".v-messages__wrapper");
-    const passwdInputDetails = document.querySelectorAll(
-      ".v-messages__wrapper"
-    )[1];
-    if (emailInputDetails && passwdInputDetails) {
-      const eMailErrors = document.getElementById("eMailErrors");
-      const passwdErrors = document.getElementById("passwdErrors");
-      emailInputDetails.replaceWith(eMailErrors);
-      passwdInputDetails.replaceWith(passwdErrors);
-    }
   },
 
   created() {

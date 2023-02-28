@@ -64,6 +64,7 @@
                 class="mt-2"
                 v-model="$v.passwd.$model"
                 type="password"
+                :rules="rulesPasswd"
               ></v-text-field>
               <v-text-field
                 solo
@@ -73,30 +74,8 @@
                 label="Repita Contraseña"
                 v-model="$v.passwdConfirm.$model"
                 type="password"
+                :rules="rulesPasswdConfirm"
               ></v-text-field>
-              <div id="passwdErrors">
-                <small
-                  v-if="!$v.passwd.required"
-                  class="text-overline"
-                  style="color: #3f51b5"
-                  >Contraseña requerida *</small
-                >
-                <small
-                  v-if="!$v.passwd.minLength"
-                  class="text-overline"
-                  style="color: #3f51b5"
-                  >debe contener al menos 6 caracteres*</small
-                >
-              </div>
-
-              <div id="passwdConfirmErrors">
-                <small
-                  v-if="!$v.passwdConfirm.sameAs"
-                  class="text-overline"
-                  style="color: #3f51b5"
-                  >Las contraseñas deben coincidir</small
-                >
-              </div>
               <v-btn
                 :disabled="$v.$invalid"
                 type="submit"
@@ -142,26 +121,25 @@ export default {
       passwd: "",
       passwdConfirm: "",
       originalValue: "",
+      messages: [],
+      rulesPasswd: [
+        (v) => !!v || "La contraseña es requerida",
+        (v) =>
+          (v && v.length >= 6) ||
+          "La contraseña debe tener al menos 6 caracteres",
+      ],
+      rulesPasswdConfirm: [
+        (v) => !!v || "La confirmación de contraseña es requerida",
+        (v) => v === this.passwd || "Las contraseñas no coinciden",
+      ],
     };
   },
 
   mounted() {
     const nameDetails = document.querySelector(".v-messages__wrapper");
-    const passwdInputDetails = document.querySelectorAll(
-      ".v-messages__wrapper"
-    )[1];
-    const passwdConfirmInputDetails = document.querySelectorAll(
-      ".v-messages__wrapper"
-    )[2];
-    if (nameDetails && passwdInputDetails && passwdConfirmInputDetails) {
+    if (nameDetails) {
       const email = document.getElementById("email");
-      const passwdErrors = document.getElementById("passwdErrors");
-      const passwdConfirmErrors = document.getElementById(
-        "passwdConfirmErrors"
-      );
       nameDetails.replaceWith(email);
-      passwdInputDetails.replaceWith(passwdErrors);
-      passwdConfirmInputDetails.replaceWith(passwdConfirmErrors);
     }
   },
 

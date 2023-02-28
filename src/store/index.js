@@ -218,6 +218,8 @@ export default new Vuex.Store({
         });
       } else {
         commit("setError", "nameErr");
+        console.log("hola")
+        commit("setSuccess", null);
       }
     },
     changePassword ({ commit }, newPassword) {

@@ -7,7 +7,9 @@
     <div v-if="!loader">
       <v-card>
         <v-card-text>
-          <h3 style="color: black" class="text-overline">Bienvenido {{ user.name }}</h3>
+          <h3 style="color: black" class="text-overline">
+            Bienvenido {{ user.name }}
+          </h3>
         </v-card-text>
 
         <v-card-text style="height: 60vh; overflow: auto" v-chat-scroll>
@@ -17,8 +19,7 @@
             :key="index"
           >
             <v-chip color="indigo" style="color: #ffffff">
-              <v-avatar class="mr-1"> <img :src="message.photo" /> </v-avatar
-              >
+              <v-avatar class="mr-1"> <img :src="message.photo" /> </v-avatar>
               <h4 class="mr-1">{{ message.name }}:</h4>
               {{ message.message }}
             </v-chip>
@@ -26,28 +27,23 @@
           </div>
         </v-card-text>
 
-        <v-card-text style="height: 100px;">
-          <v-form @submit.prevent="sendMessage">
-            <v-text-field
+        <v-card-text style="height: 120px">
+          <v-form ref="form">
+            <v-textarea
+              auto-grow
+              rows="1"
               solo
-              dense
               required
               append-icon="mdi-send"
               color="indigo"
               label="Escribe tu mensaje"
               class="mt-2"
-              v-model="message"
-            ></v-text-field>
-
-            <div id="validations">
-              <p
-                style="color: #3f51b5"
-                class="text-overline"
-                v-show="!$v.message.required"
-              >
-                El mensaje es requerido
-              </p>
-            </div>
+              v-model.trim="message"
+              :rules="rules"
+              error-icon-color=""
+              return-key="true"
+              @keydown.enter.prevent="sendMessage"
+            ></v-textarea>
           </v-form>
         </v-card-text>
       </v-card>
@@ -57,7 +53,6 @@
 
 <script>
 import { mapState, mapMutations } from "vuex";
-import { required } from "vuelidate/lib/validators";
 import { db } from "../firebase";
 import moment from "moment";
 import PulseLoader from "vue-spinner/src/PulseLoader.vue";
@@ -69,15 +64,8 @@ export default {
     return {
       message: "",
       messages: [],
+      rules: [(v) => !!v || "El mensaje es requerido"],
     };
-  },
-
-  mounted() {
-    this.moveValidations();
-  },
-
-  updated() {
-    this.moveValidations();
   },
 
   created() {
@@ -89,11 +77,7 @@ export default {
   methods: {
     ...mapMutations(["setLoader"]),
     sendMessage() {
-      if (this.$v.$invalid) {
-        console.log("Completa tu mensaje");
-      } else {
-        console.log(this.message);
-
+      if (this.$refs.form.validate()) {
         db.collection("chats")
           .add({
             name: this.user.name,
@@ -127,21 +111,26 @@ export default {
         this.setLoader(false);
       }, 1000);
     },
-    moveValidations() {
-      const inputDetails = document.querySelector(".v-messages__wrapper");
-      if (inputDetails) {
-        const validations = document.getElementById("validations");
-        inputDetails.replaceWith(validations);
-      }
-    },
   },
 
   computed: {
     ...mapState(["user", "loader"]),
   },
-
-  validations: {
-    message: { required },
-  },
 };
 </script>
+
+<style>
+.v-messages__message {
+  color: #3f51b5 !important;
+  font-size: 0.75rem !important;
+  font-weight: 500;
+  line-height: 2rem;
+  letter-spacing: 0.1666666667em !important;
+  font-family: "Roboto", sans-serif !important;
+  text-transform: uppercase !important;
+}
+
+.v-input__icon ::before {
+  color: #3f51b5 !important;
+}
+</style>

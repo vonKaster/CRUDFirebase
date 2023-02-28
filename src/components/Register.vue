@@ -16,6 +16,7 @@
             type="email"
             placeholder="Ingrese su correo electŕonico"
             v-model="$v.email.$model"
+            :rules="rulesEmail"
           />
           <v-text-field
             color="indigo"
@@ -24,6 +25,7 @@
             type="text"
             placeholder="Ingrese un usuario"
             v-model="$v.name.$model"
+            :rules="rulesName"
           />
           <v-text-field
             color="indigo"
@@ -32,6 +34,7 @@
             type="password"
             placeholder="Ingrese su contraseña"
             v-model="$v.passwd.$model"
+            :rules="rulesPasswd"
           />
           <v-text-field
             color="indigo"
@@ -40,61 +43,8 @@
             type="password"
             placeholder="Repita su contraseña"
             v-model="passwdConfirm"
+            :rules="rulesPasswdConfirm"
           />
-          <div id="eMailErrors">
-            <small
-              v-if="!$v.email.required"
-              class="text-overline"
-              style="color: #3f51b5"
-              >email Requerido *</small
-            >
-            <small
-              v-if="!$v.email.email"
-              class="text-overline"
-              style="color: #3f51b5"
-              >Email no válido *</small
-            >
-          </div>
-
-          <div id="nameErrors">
-            <small
-              v-if="!$v.name.required"
-              class="text-overline"
-              style="color: #3f51b5"
-              >Nombre requerido *</small
-            >
-            <small
-              v-if="!$v.name.minLength"
-              class="text-overline"
-              style="color: #3f51b5"
-              >Tu nombre debe contener al menos 3 cararacteres *</small
-            >
-          </div>
-
-          <div id="passwdErrors">
-            <small
-              v-if="!$v.passwd.required"
-              class="text-overline"
-              style="color: #3f51b5"
-              >Contraseña requerida *</small
-            >
-            <small
-              v-if="!$v.passwd.minLength"
-              class="text-overline"
-              style="color: #3f51b5"
-              >debe contener al menos 6 caracteres*</small
-            >
-          </div>
-
-          <div id="passwdConfirmErrors">
-            <small
-              v-if="!$v.passwdConfirm.sameAs"
-              class="text-overline"
-              style="color: #3f51b5"
-              >Las contraseñas no coinciden</small
-            >
-          </div>
-
           <v-btn :disabled="$v.$invalid" color="indigo" style="color: #ffffff" type="submit"
             >Registrarse</v-btn
           >
@@ -123,6 +73,26 @@ export default {
       name: "",
       passwd: "",
       passwdConfirm: "",
+      rulesEmail: [
+        (v) => !!v || "El email es requerido",
+        (v) => /.+@.+\..+/.test(v) || "El correo electrónico no es válido",
+      ],
+      rulesPasswd: [
+        (v) => !!v || "La contraseña es requerida",
+        (v) =>
+          (v && v.length >= 6) ||
+          "La contraseña debe tener al menos 6 caracteres",
+      ],
+      rulesPasswdConfirm: [
+        (v) => !!v || "La confirmación de contraseña es requerida",
+        (v) => v === this.passwd || "Las contraseñas no coinciden",
+      ],
+      rulesName: [
+        (v) => !!v || "El nombre es requerido",
+        (v) =>
+          (v && v.length >= 3) ||
+          "El usuario debe tener al menos 3 caracteres",
+      ],
     };
   },
 
@@ -142,31 +112,6 @@ export default {
       }
     `;
     document.head.appendChild(style);
-  },
-
-  mounted() {
-    const emailInputDetails = document.querySelector(".v-messages__wrapper");
-    const nameInputDetails = document.querySelectorAll(
-      ".v-messages__wrapper"
-    )[1];
-    const passwdInputDetails = document.querySelectorAll(
-      ".v-messages__wrapper"
-    )[2];
-    const passwdConfirmInputDetails = document.querySelectorAll(
-      ".v-messages__wrapper"
-    )[3];
-    if (emailInputDetails && passwdInputDetails && passwdConfirmInputDetails && nameInputDetails) {
-      const eMailErrors = document.getElementById("eMailErrors");
-      const passwdErrors = document.getElementById("passwdErrors");
-      const passwdConfirmErrors = document.getElementById(
-        "passwdConfirmErrors"
-      );
-      const nameErrors = document.getElementById("nameErrors");
-      emailInputDetails.replaceWith(eMailErrors);
-      passwdInputDetails.replaceWith(passwdErrors);
-      passwdConfirmInputDetails.replaceWith(passwdConfirmErrors);
-      nameInputDetails.replaceWith(nameErrors);
-    }
   },
 
   beforeDestroy() {

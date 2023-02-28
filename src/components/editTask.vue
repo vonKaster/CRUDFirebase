@@ -8,21 +8,7 @@
         <h1 class="text-center">Editar Tarea</h1>
         <h4 class="text-overline text-center mb-2">ID: {{ task.id }}</h4>
         <v-form @submit.prevent="editTask(task)">
-          <v-text-field color="indigo" outlined v-model="$v.task.name.$model" />
-          <div id="errors">
-            <small
-              v-if="!$v.task.name.required"
-              class="text-overline"
-              style="color: #3f51b5"
-              >Campo Requerido *</small
-            >
-            <small
-              v-if="!$v.task.name.minLength"
-              class="text-overline"
-              style="color: #3f51b5"
-              >Debe tener al menos 5 caracteres *</small
-            >
-          </div>
+          <v-text-field color="indigo" outlined v-model="$v.task.name.$model" :rules="rules" label="Nombre"/>
           <v-btn :disabled="$v.$invalid || loader" color="warning" type="submit"
             ><v-icon class="mr-1">mdi-note-edit</v-icon>Editar</v-btn
           >
@@ -41,15 +27,13 @@ export default {
   data() {
     return {
       id: this.$route.params.id,
+      rules: [
+        (v) => !!v || "El nombre es requerido",
+        (v) =>
+          (v && v.length >= 5) ||
+          "La tarea debe contener al menos 5 caracteres",
+      ],
     };
-  },
-
-  mounted() {
-    const messagesWrapper = document.querySelector(".v-messages__wrapper");
-    if (messagesWrapper) {
-      const errors = document.getElementById("errors");
-      messagesWrapper.replaceWith(errors);
-    }
   },
 
   created() {

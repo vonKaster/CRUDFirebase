@@ -15,21 +15,8 @@
               outlined
               label="Nombre"
               v-model="$v.name.$model"
+              :rules="rules"
             />
-            <div id="errors">
-              <small
-                v-if="!$v.name.required"
-                class="text-overline"
-                style="color: #3f51b5"
-                >Campo Requerido *</small
-              >
-              <small
-                v-if="!$v.name.minLength"
-                class="text-overline"
-                style="color: #3f51b5"
-                >Debe tener al menos 5 caracteres *</small
-              >
-            </div>
             <v-btn
               color="indigo"
               style="color: #ffffff"
@@ -60,15 +47,13 @@ export default {
   data() {
     return {
       name: "",
+      rules: [
+        (v) => !!v || "El nombre es requerido",
+        (v) =>
+          (v && v.length >= 5) ||
+          "La tarea debe contener al menos 5 caracteres",
+      ],
     };
-  },
-
-  mounted() {
-    const messagesWrapper = document.querySelector(".v-messages__wrapper");
-    if (messagesWrapper) {
-      const errors = document.getElementById("errors");
-      messagesWrapper.replaceWith(errors);
-    }
   },
 
   created() {
@@ -83,6 +68,17 @@ export default {
     ...mapActions(["addTask"]),
   },
 
+  mounted() {
+    this.$nextTick(() => {
+      const nameField = this.$refs.nameField.$el;
+      const errorText = nameField.querySelector(".error--text");
+      if (errorText) {
+        errorText.classList.replace("error--text", "error--text-custom");
+      }
+    });
+  },
+  
+
   validations: {
     name: {
       required,
@@ -93,7 +89,8 @@ export default {
 </script>
 
 <style scoped>
-.required-text {
-  color: #ff5252;
+.error-text-custom {
+  color: green !important;
+  caret-color: green !important;
 }
 </style>
