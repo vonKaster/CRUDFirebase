@@ -159,8 +159,10 @@ export default {
 
   beforeDestroy() {
     const style = document.getElementById("custom-main-style");
+    const spacer = document.getElementById("custom-spacer");
     if (style) {
       document.head.removeChild(style);
+      document.head.removeChild(spacer);
     }
     this.setError(null);
   },
@@ -176,7 +178,7 @@ export default {
     createSpacer() {
       console.log("ejecutada");
       const style = document.createElement("style");
-      style.setAttribute("id", "custom-main-style");
+      style.setAttribute("id", "custom-spacer");
       style.textContent = `
       @media (max-width: 600px) {
         .formLoginContainer {

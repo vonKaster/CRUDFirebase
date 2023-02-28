@@ -11,6 +11,7 @@
                 ref="fileInput"
                 type="file"
                 style="display: none"
+                accept=".png, .jpg, .jpeg, .ico, .svg"
               />
             </v-avatar>
             <v-icon size="30" class="edit-icon">mdi-pencil</v-icon>
