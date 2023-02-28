@@ -33,7 +33,7 @@ export default {
 }
 
 .formLoginContainer {
-  width: 500px;
+  width: 500px!important;
   height: 305px;
   border-radius: 5px;
 }

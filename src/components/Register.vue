@@ -6,7 +6,11 @@
         <br />
         <v-form
           @submit.prevent="
-            createUser({ email: $v.email.$model, passwd: $v.passwd.$model, name: $v.name.$model })
+            createUser({
+              email: $v.email.$model,
+              passwd: $v.passwd.$model,
+              name: $v.name.$model,
+            })
           "
         >
           <v-text-field
@@ -27,25 +31,52 @@
             v-model="$v.name.$model"
             :rules="rulesName"
           />
-          <v-text-field
+          <div class="d-flex">
+            <v-text-field
+              color="indigo"
+              append-icon="mdi-lock"
+              outlined
+              :type="showPassword ? 'text' : 'password'"
+              placeholder="Ingrese su contraseña"
+              v-model="$v.passwd.$model"
+              :rules="rulesPasswd"
+            />
+            <v-btn
+              icon
+              @click="showPassword = !showPassword"
+              :color="showPassword ? 'indigo' : undefined"
+              class="ml-2 mt-2"
+            >
+              <v-icon>{{ showPassword ? "mdi-eye-off" : "mdi-eye" }}</v-icon>
+            </v-btn>
+          </div>
+          <div class="d-flex">
+            <v-text-field
+              color="indigo"
+              append-icon="mdi-lock-check"
+              outlined
+              :type="showPasswordConfirm ? 'text' : 'password'"
+              placeholder="Repita su contraseña"
+              v-model="passwdConfirm"
+              :rules="rulesPasswdConfirm"
+            />
+            <v-btn
+              icon
+              @click="showPasswordConfirm = !showPasswordConfirm"
+              :color="showPasswordConfirm ? 'indigo' : undefined"
+              class="ml-2 mt-2"
+            >
+              <v-icon>{{
+                showPasswordConfirm ? "mdi-eye-off" : "mdi-eye"
+              }}</v-icon>
+            </v-btn>
+          </div>
+          <v-btn
+            class="mb-2"
+            :disabled="$v.$invalid"
             color="indigo"
-            append-icon="mdi-lock"
-            outlined
-            type="password"
-            placeholder="Ingrese su contraseña"
-            v-model="$v.passwd.$model"
-            :rules="rulesPasswd"
-          />
-          <v-text-field
-            color="indigo"
-            append-icon="mdi-lock-check"
-            outlined
-            type="password"
-            placeholder="Repita su contraseña"
-            v-model="passwdConfirm"
-            :rules="rulesPasswdConfirm"
-          />
-          <v-btn :disabled="$v.$invalid" color="indigo" style="color: #ffffff" type="submit"
+            style="color: #ffffff"
+            type="submit"
             >Registrarse</v-btn
           >
           <p
@@ -90,9 +121,10 @@ export default {
       rulesName: [
         (v) => !!v || "El nombre es requerido",
         (v) =>
-          (v && v.length >= 3) ||
-          "El usuario debe tener al menos 3 caracteres",
+          (v && v.length >= 3) || "El usuario debe tener al menos 3 caracteres",
       ],
+      showPassword: false,
+      showPasswordConfirm: false,
     };
   },
 
@@ -107,11 +139,19 @@ export default {
       }
       @media (max-width: 600px) {
         main {
-          padding-top: 168px!important;
+          padding-top: 90px!important;
         }
       }
     `;
     document.head.appendChild(style);
+  },
+
+  updated() {
+    if (
+      this.error === "auth/email-already-in-use"
+    ) {
+      this.createSpacer();
+    }
   },
 
   beforeDestroy() {
@@ -125,6 +165,20 @@ export default {
   methods: {
     ...mapActions(["createUser"]),
     ...mapMutations(["setError"]),
+
+    createSpacer() {
+      const style = document.createElement("style");
+      style.setAttribute("id", "custom-main-style");
+      style.textContent = `
+      @media (max-width: 600px) {
+        .formLoginContainer {
+           height: 90vh;
+        }
+      }
+      
+    `;
+      document.head.appendChild(style);
+    },
   },
 
   computed: {

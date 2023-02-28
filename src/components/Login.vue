@@ -21,15 +21,26 @@
             append-icon="mdi-account"
             :rules="rulesEmail"
           />
-          <v-text-field
-            color="indigo"
-            outlined
-            type="password"
-            placeholder="Ingrese su contraseña"
-            v-model="$v.passwd.$model"
-            append-icon="mdi-lock"
-            :rules="rulesPasswd"
-          />
+          <div class="d-flex">
+            <v-text-field
+              class="flex-grow-1"
+              color="indigo"
+              outlined
+              :type="showPassword ? 'text' : 'password'"
+              placeholder="Ingrese su contraseña"
+              v-model="$v.passwd.$model"
+              append-icon="mdi-lock"
+              :rules="rulesPasswd"
+            />
+            <v-btn
+              icon
+              @click="showPassword = !showPassword"
+              :color="showPassword ? 'indigo' : undefined"
+              class="ml-2 mt-2"
+            >
+              <v-icon>{{ showPassword ? "mdi-eye-off" : "mdi-eye" }}</v-icon>
+            </v-btn>
+          </div>
           <v-btn
             :disabled="$v.$invalid"
             style="color: #ffffff"
@@ -39,7 +50,7 @@
           >
         </v-form>
         <p
-          v-if="error === 'auth/user-not-found'"
+          v-show="error === 'auth/user-not-found'"
           style="color: #ff5252"
           class="text-center mt-4 text-overline"
         >
@@ -113,6 +124,7 @@ export default {
           (v && v.length >= 6) ||
           "La contraseña debe tener al menos 6 caracteres",
       ],
+      showPassword: false,
     };
   },
 
@@ -130,8 +142,19 @@ export default {
           padding-top: 168px!important;
         }
       }
+      
     `;
     document.head.appendChild(style);
+  },
+
+  updated() {
+    if (
+      this.error === "auth/user-not-found" ||
+      this.error === "auth/wrong-password" ||
+      this.error === "auth/too-many-requests"
+    ) {
+      this.createSpacer();
+    }
   },
 
   beforeDestroy() {
@@ -149,6 +172,21 @@ export default {
   methods: {
     ...mapActions(["signIn"]),
     ...mapMutations(["setError"]),
+
+    createSpacer() {
+      console.log("ejecutada");
+      const style = document.createElement("style");
+      style.setAttribute("id", "custom-main-style");
+      style.textContent = `
+      @media (max-width: 600px) {
+        .formLoginContainer {
+           height: 80vh;
+        }
+      }
+      
+    `;
+      document.head.appendChild(style);
+    },
   },
 
   validations: {
@@ -157,3 +195,10 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.text-field-wrapper {
+  width: 100%;
+  display: inline-block;
+}
+</style>

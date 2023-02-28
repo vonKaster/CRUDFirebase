@@ -55,27 +55,50 @@
             <v-divider class="mt-3"></v-divider>
             <h2 class="text-center mt-3">Cambiar Contraseña</h2>
             <v-form @submit.prevent="changePassword($v.passwd.$model)">
-              <v-text-field
-                solo
-                dense
-                append-icon="mdi-lock"
-                color="indigo"
-                label="Nueva Contraseña"
-                class="mt-2"
-                v-model="$v.passwd.$model"
-                type="password"
-                :rules="rulesPasswd"
-              ></v-text-field>
-              <v-text-field
-                solo
-                dense
-                append-icon="mdi-lock-check"
-                color="indigo"
-                label="Repita Contraseña"
-                v-model="$v.passwdConfirm.$model"
-                type="password"
-                :rules="rulesPasswdConfirm"
-              ></v-text-field>
+              <div class="d-flex mt-2">
+                <v-text-field
+                  solo
+                  dense
+                  append-icon="mdi-lock"
+                  color="indigo"
+                  label="Nueva Contraseña"
+                  v-model="$v.passwd.$model"
+                  :type="showPassword ? 'text' : 'password'"
+                  :rules="rulesPasswd"
+                ></v-text-field>
+                <v-btn
+                  icon
+                  @click="showPassword = !showPassword"
+                  :color="showPassword ? 'indigo' : undefined"
+                  class="ml-2"
+                >
+                  <v-icon>{{
+                    showPassword ? "mdi-eye-off" : "mdi-eye"
+                  }}</v-icon>
+                </v-btn>
+              </div>
+              <div class="d-flex">
+                <v-text-field
+                  solo
+                  dense
+                  append-icon="mdi-lock-check"
+                  color="indigo"
+                  label="Repita Contraseña"
+                  v-model="$v.passwdConfirm.$model"
+                  :type="showPasswordConfirm ? 'text' : 'password'"
+                  :rules="rulesPasswdConfirm"
+                ></v-text-field>
+                <v-btn
+                  icon
+                  @click="showPasswordConfirm = !showPasswordConfirm"
+                  :color="showPasswordConfirm ? 'indigo' : undefined"
+                  class="ml-2"
+                >
+                  <v-icon>{{
+                    showPasswordConfirm ? "mdi-eye-off" : "mdi-eye"
+                  }}</v-icon>
+                </v-btn>
+              </div>
               <v-btn
                 :disabled="$v.$invalid"
                 type="submit"
@@ -132,6 +155,8 @@ export default {
         (v) => !!v || "La confirmación de contraseña es requerida",
         (v) => v === this.passwd || "Las contraseñas no coinciden",
       ],
+      showPassword: false,
+      showPasswordConfirm: false
     };
   },
 

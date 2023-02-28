@@ -69,13 +69,10 @@ export default {
   },
 
   mounted() {
-    this.$nextTick(() => {
-      const nameField = this.$refs.nameField.$el;
-      const errorText = nameField.querySelector(".error--text");
+      const errorText = document.querySelector(".error--text");
       if (errorText) {
         errorText.classList.replace("error--text", "error--text-custom");
-      }
-    });
+      };
   },
   
 
@@ -87,10 +84,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.error-text-custom {
-  color: green !important;
-  caret-color: green !important;
-}
-</style>
