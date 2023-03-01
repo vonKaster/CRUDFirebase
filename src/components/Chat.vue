@@ -74,6 +74,26 @@ export default {
     document.title = "CRUD | Chat";
     moment.locale("es");
     this.getMessages();
+    const style = document.createElement("style");
+    style.setAttribute("id", "custom-main-style");
+    style.textContent = `
+    .v-messages__message {
+      color: white !important;
+      font-size: 0.75rem !important;
+      font-weight: 500;
+      line-height: 2rem;
+      letter-spacing: 0.1666666667em !important;
+      font-family: "Roboto", sans-serif !important;
+      text-transform: uppercase !important;
+    }`;
+    document.head.appendChild(style);
+  },
+
+  beforeDestroy() {
+    const style = document.getElementById("custom-main-style");
+    if (style) {
+      document.head.removeChild(style);
+    }
   },
 
   methods: {
@@ -134,19 +154,3 @@ export default {
   },
 };
 </script>
-
-<style>
-.v-messages__message {
-  color: white !important;
-  font-size: 0.75rem !important;
-  font-weight: 500;
-  line-height: 2rem;
-  letter-spacing: 0.1666666667em !important;
-  font-family: "Roboto", sans-serif !important;
-  text-transform: uppercase !important;
-}
-
-.v-input__icon ::before {
-  color: #3f51b5 !important;
-}
-</style>

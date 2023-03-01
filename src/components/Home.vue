@@ -10,8 +10,16 @@
         ><v-icon class="mr-1">mdi-note-plus</v-icon>Agregar Tarea</v-btn
       >
 
-      <v-form @submit.prevent="(searchTasks(searchText))">
-        <v-text-field :label="'Buscar'" v-on:keyup="(searchTasks(searchText))" v-model="searchText" color="indigo" append-icon="mdi-note-search" class="mt-4" outlined></v-text-field>
+      <v-form @submit.prevent="searchTasks(searchText)">
+        <v-text-field
+          :label="'Buscar'"
+          v-on:keyup="searchTasks(searchText)"
+          v-model="searchText"
+          color="indigo"
+          append-icon="mdi-note-search"
+          class="mt-4"
+          outlined
+        ></v-text-field>
       </v-form>
 
       <v-data-table
@@ -64,11 +72,11 @@ export default {
 
   data: () => ({
     headers: [
-      { text: "ID", value: "id" },
       { text: "Nombre", value: "name" },
+      { text: "ID", value: "id" },
       { text: "Acciones", value: "actions", align: "right" },
     ],
-    searchText: ""
+    searchText: "",
   }),
 
   methods: {
@@ -77,7 +85,7 @@ export default {
 
   computed: {
     ...mapState(["tasks", "snackBarAlerts", "loader", "user"]),
-    ...mapGetters(["tasksFiltered"])
+    ...mapGetters(["tasksFiltered"]),
   },
 };
 </script>

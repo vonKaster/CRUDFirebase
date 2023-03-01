@@ -55,6 +55,20 @@ export default {
   width: 100%;
 }
 
+.v-messages__message {
+  color: #3f51b5;
+  font-size: 0.75rem !important;
+  font-weight: 500!important;
+  line-height: 2rem!important;
+  letter-spacing: 0.1666666667em !important;
+  font-family: "Roboto", sans-serif !important;
+  text-transform: uppercase !important;
+}
+
+.v-input__icon ::before {
+  color: #3f51b5 !important;
+}
+
 @media (max-width: 600px) {
   .editTaskContainer {
     width: 90%!important;
